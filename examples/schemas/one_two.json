@@ -1,0 +1,10 @@
+{
+  "title": "Example Schema",
+  "type": "object",
+  "properties": {
+    "one": {
+      "type": "string"
+    }
+  },
+  "required": ["one"]
+}

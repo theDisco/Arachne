@@ -1,0 +1,104 @@
+<?php
+
+namespace Arachne\ServiceContainer;
+
+use Arachne\Validation;
+use Behat\Behat\Context\ServiceContainer\ContextExtension;
+use Behat\Testwork\ServiceContainer\Extension;
+use Behat\Testwork\ServiceContainer\ExtensionManager;
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Reference;
+
+class ArachneExtension implements Extension
+{
+    const VALIDATION_PROVIDER_REF = 'arachne.ref.validation_provider';
+    const CLIENT_REF = 'arachne.ref.client';
+    const FILE_LOCATOR_REF = 'arachne.ref.file_locator';
+
+    /**
+     * {@inheritDoc}
+     */
+    public function process(ContainerBuilder $container)
+    {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getConfigKey()
+    {
+        return 'arachne';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function initialize(ExtensionManager $extensionManager)
+    {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function configure(ArrayNodeDefinition $builder)
+    {
+        $builder
+            ->children()
+                ->scalarNode('base_url')->isRequired()->end()
+                ->scalarNode('schema_file_dir')->isRequired()->end()
+                ->scalarNode('response_file_dir')->isRequired()->end()
+            ->end()
+        ->end();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function load(ContainerBuilder $container, array $config)
+    {
+        $this->loadFileLocator($container, $config);
+        $this->loadValidationProvider($container);
+        $this->loadClient($container, $config);
+        $this->loadContextInitializer($container);
+    }
+
+    private function loadFileLocator(ContainerBuilder $container, array $config)
+    {
+        $definition = new Definition('Arachne\FileSystem\FileLocator', [$config]);
+        $container->setDefinition(self::FILE_LOCATOR_REF, $definition);
+    }
+
+    private function loadValidationProvider(ContainerBuilder $container)
+    {
+        // TODO load before and provide configurable (json, xml) schema validation
+        $definition = new Definition(
+            'Arachne\Validation\Provider',
+            array(
+                new Reference(self::FILE_LOCATOR_REF),
+                new Validation\Schema\JsonSchema
+            )
+        );
+        $container->setDefinition(self::VALIDATION_PROVIDER_REF, $definition);
+    }
+
+    private function loadClient(ContainerBuilder $container, array $config)
+    {
+        $definition = new Definition('Arachne\Http\Client\Guzzle', [$config['base_url']]);
+        $container->setDefinition(self::CLIENT_REF, $definition);
+    }
+
+    private function loadContextInitializer(ContainerBuilder $container)
+    {
+        $definition = new Definition(
+            'Arachne\Context\Initializer\ArachneInitializer',
+            [
+                new Reference(self::VALIDATION_PROVIDER_REF),
+                new Reference(self::CLIENT_REF),
+            ]
+        );
+        $definition->addTag(ContextExtension::INITIALIZER_TAG, array('priority' => 0));
+        $container->setDefinition('arachne.context_initializer', $definition);
+    }
+}

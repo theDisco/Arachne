@@ -1,0 +1,10 @@
+default:
+  extensions:
+    Arachne\ServiceContainer\ArachneExtension:
+      base_url: http://echo.jsontest.com
+      schema_file_dir: %paths.base%/schemas
+      response_file_dir: %paths.base%/responses
+  suites:
+    json:
+      contexts:
+        - FeatureContext
