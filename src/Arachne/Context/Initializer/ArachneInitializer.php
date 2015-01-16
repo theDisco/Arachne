@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Arachne package.
+ *
+ * (c) Wojtek Gancarczyk <gancarczyk@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Arachne\Context\Initializer;
 
 use Arachne\Context\ArachneContext;
@@ -8,6 +17,11 @@ use Arachne\Validation\Provider;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Context\Initializer\ContextInitializer;
 
+/**
+ * Class ArachneInitializer
+ * @package Arachne\Context\Initializer
+ * @author Wojtek Gancarczyk <gancarczyk@gmail.com>
+ */
 class ArachneInitializer implements ContextInitializer
 {
     private $validationProvider;

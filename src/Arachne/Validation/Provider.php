@@ -1,17 +1,44 @@
 <?php
 
+/*
+ * This file is part of the Arachne package.
+ *
+ * (c) Wojtek Gancarczyk <gancarczyk@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Arachne\Validation;
 
 use Arachne\FileSystem\FileLocator;
 
+/**
+ * Class Provider
+ * @package Arachne\Validation
+ * @author Wojtek Gancarczyk <gancarczyk@gmail.com>
+ */
 class Provider
 {
+    /**
+     * @var Schema\ValidatorInterface
+     */
     private $schemaValidator;
 
+    /**
+     * @var Assert
+     */
     private $assertion;
 
+    /**
+     * @var FileLocator
+     */
     private $fileLocator;
 
+    /**
+     * @param FileLocator $fileLocator
+     * @param Schema\ValidatorInterface $schemaValidator
+     */
     public function __construct(FileLocator $fileLocator, Schema\ValidatorInterface $schemaValidator)
     {
         $this->fileLocator = $fileLocator;

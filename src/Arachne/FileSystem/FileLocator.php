@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Arachne package.
+ *
+ * (c) Wojtek Gancarczyk <gancarczyk@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Arachne\FileSystem;
 
 use RuntimeException;
@@ -7,6 +16,7 @@ use RuntimeException;
 /**
  * Class FileLocator
  * @package Arachne\FileSystem
+ * @author Wojtek Gancarczyk <gancarczyk@gmail.com>
  */
 class FileLocator
 {

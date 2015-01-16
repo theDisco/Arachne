@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Arachne package.
+ *
+ * (c) Wojtek Gancarczyk <gancarczyk@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Arachne\Context;
 
 use Arachne\Exception;
@@ -7,6 +16,11 @@ use Arachne\Http;
 use Arachne\Validation;
 use Behat\Behat\Context\Context;
 
+/**
+ * Class ArachneContext
+ * @package Arachne\Context
+ * @author Wojtek Gancarczyk <gancarczyk@gmail.com>
+ */
 class ArachneContext implements Context
 {
     /**
