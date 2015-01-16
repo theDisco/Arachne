@@ -1,9 +1,24 @@
 <?php
 
+/*
+ * This file is part of the Arachne package.
+ *
+ * (c) Wojtek Gancarczyk <gancarczyk@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Arachne\Tests\FileSystem;
 
 use Arachne\FileSystem\FileLocator;
+use Arachne\Mocks\Factory;
 
+/**
+ * Class FileLocatorTest
+ * @package Arachne\Tests\FileSystem
+ * @author Wojtek Gancarczyk <gancarczyk@gmail.com>
+ */
 class FileLocatorTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -13,12 +28,7 @@ class FileLocatorTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $config = array(
-            'schema_file_dir' => FIXTURES_DIR . '/schemas',
-            'request_file_dir' => FIXTURES_DIR . '/requests',
-            'response_file_dir' => FIXTURES_DIR . '/responses',
-        );
-        $this->fileLocator = new FileLocator($config);
+        $this->fileLocator = Factory::createFileLocator();
     }
 
     public function testFailOnNotExistingConfigurationValue()

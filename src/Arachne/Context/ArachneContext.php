@@ -15,6 +15,7 @@ use Arachne\Exception;
 use Arachne\Http;
 use Arachne\Validation;
 use Behat\Behat\Context\Context;
+use RuntimeException;
 
 /**
  * Class ArachneContext
@@ -48,6 +49,18 @@ class ArachneContext implements Context
     }
 
     /**
+     * @return Http\Client\ClientInterface
+     */
+    protected function getHttpClient()
+    {
+        if (!$this->client) {
+            throw new RuntimeException('Http client was not set');
+        }
+
+        return $this->client;
+    }
+
+    /**
      * @param Validation\Provider $validationProvider
      * @return void
      */
@@ -61,7 +74,7 @@ class ArachneContext implements Context
      */
     public function iUseRequestMethod($arg1)
     {
-        $this->client->setRequestMethod($arg1);
+        $this->getHttpClient()->setRequestMethod($arg1);
     }
 
     /**
@@ -69,7 +82,7 @@ class ArachneContext implements Context
      */
     public function iAccessTheResourceUrl($arg1)
     {
-        $this->client->setPath($arg1);
+        $this->getHttpClient()->setPath($arg1);
     }
 
     /**
@@ -78,7 +91,7 @@ class ArachneContext implements Context
     public function iUseTheFileAsRequestBody($arg1)
     {
         // TODO web service type should not come from schema validator
-        $this->client->setRequestBody($arg1, true, 'json');
+        $this->getHttpClient()->setRequestBody($arg1, true, 'json');
     }
 
     /**
@@ -86,7 +99,19 @@ class ArachneContext implements Context
      */
     public function iSendTheRequest()
     {
-        $this->response = $this->client->send();
+        $this->response = $this->getHttpClient()->send();
+    }
+
+    /**
+     * @return Http\Response\ResponseInterface
+     */
+    protected function getResponse()
+    {
+        if (!$this->response) {
+            throw new RuntimeException('Request was not sent yet. Use `When I send the request` to send the request.');
+        }
+
+        return $this->response;
     }
 
     /**
@@ -94,7 +119,7 @@ class ArachneContext implements Context
      */
     public function theStatusCodeShouldBe($arg1)
     {
-        $statusCode = $this->response->getStatusCode();
+        $statusCode = $this->getResponse()->getStatusCode();
 
         if ($statusCode !== intval($arg1)) {
             throw new Exception\InvalidStatusCode(
@@ -108,7 +133,7 @@ class ArachneContext implements Context
      */
     public function responseShouldBeAValidJson()
     {
-        json_decode($this->response->getBody());
+        json_decode($this->getResponse()->getBody());
 
         if (json_last_error() > 0) {
             throw new Exception\InvalidJson(
@@ -122,9 +147,21 @@ class ArachneContext implements Context
      */
     public function responseHeaderShouldContain($arg1, $arg2)
     {
-        if ($this->response->getHeader($arg1) !== $arg2) {
+        if ($this->getResponse()->getHeader($arg1) !== $arg2) {
             throw new Exception\InvalidResponseHeader;
         }
+    }
+
+    /**
+     * @return Validation\Provider
+     */
+    protected function getValidationProvider()
+    {
+        if (!$this->validationProvider) {
+            throw new RuntimeException('Validation provider was not set');
+        }
+
+        return $this->validationProvider;
     }
 
     /**
@@ -132,7 +169,7 @@ class ArachneContext implements Context
      */
     public function responseShouldValidateAgainstSchema($arg1)
     {
-        $this->validationProvider->validateAgainstSchema(
+        $this->getValidationProvider()->validateAgainstSchema(
             $this->response->getBody(),
             $arg1
         );
@@ -143,6 +180,6 @@ class ArachneContext implements Context
      */
     public function responseShouldBeIdenticalToFile($arg1)
     {
-        $this->validationProvider->validateStringEqualsFile($this->response->getBody(), $arg1);
+        $this->getValidationProvider()->validateStringEqualsFile($this->response->getBody(), $arg1);
     }
 }
