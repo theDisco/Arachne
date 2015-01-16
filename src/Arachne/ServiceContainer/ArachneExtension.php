@@ -47,8 +47,15 @@ class ArachneExtension implements Extension
         $builder
             ->children()
                 ->scalarNode('base_url')->isRequired()->end()
-                ->scalarNode('schema_file_dir')->isRequired()->end()
-                ->scalarNode('response_file_dir')->isRequired()->end()
+                ->scalarNode('schema_file_dir')
+                    ->defaultValue('%paths.base%/schemas')
+                ->end()
+                ->scalarNode('request_file_dir')
+                    ->defaultValue('%paths.base%/requests')
+                ->end()
+                ->scalarNode('response_file_dir')
+                    ->defaultValue('%paths.base%/responses')
+                ->end()
             ->end()
         ->end();
     }
