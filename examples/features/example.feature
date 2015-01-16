@@ -22,7 +22,7 @@ Feature: twitter sample
   Scenario:
     Given I use "POST" request method
     When I access the resource url "/one/two"
-    And I use the "body" file as request body
+    And I use the "one_two" file as request body
     And I send the request
     Then the status code should be 200
     And response should be a valid JSON

@@ -11,8 +11,10 @@
 
 namespace Arachne\Http\Client;
 
+use Arachne\FileSystem\FileLocator;
 use Arachne\Http\Response;
 use GuzzleHttp\Client;
+use GuzzleHttp\Stream;
 
 /**
  * Class Guzzle
@@ -25,32 +27,59 @@ class Guzzle implements ClientInterface
     private $requestMethod;
     private $path;
     private $requestBody;
+    private $fileLocator;
 
-    public function __construct($baseUrl)
+    /**
+     * @param string $baseUrl
+     * @param FileLocator $fileLocator
+     */
+    public function __construct($baseUrl, FileLocator $fileLocator)
     {
         $this->baseUrl = $baseUrl;
+        $this->fileLocator = $fileLocator;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function setRequestMethod($method)
     {
         assert(in_array($method, array('GET', 'POST', 'PUT', 'DELETE')));
         $this->requestMethod = $method;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function setPath($path)
     {
         $this->path = $path;
     }
 
-    public function setRequestBody($requestBody)
+    /**
+     * {@inheritDoc}
+     */
+    public function setRequestBody($requestBody, $isFromFile, $extension = null)
     {
-        $this->requestBody = $requestBody;
+        if ($isFromFile) {
+            $path = $this->fileLocator->locateRequestFile($requestBody, $extension);
+            $requestBody = fopen($path, 'r');
+        }
+
+        $this->requestBody = Stream\Stream::factory($requestBody);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function send()
     {
         $client = new Client;
         $request = $client->createRequest($this->requestMethod, $this->baseUrl . $this->path);
+
+        if ($this->requestBody) {
+            $request->setBody($this->requestBody);
+        }
 
         return new Response\Guzzle($client->send($request));
     }

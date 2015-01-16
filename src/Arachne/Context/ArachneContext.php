@@ -77,7 +77,8 @@ class ArachneContext implements Context
      */
     public function iUseTheFileAsRequestBody($arg1)
     {
-
+        // TODO web service type should not come from schema validator
+        $this->client->setRequestBody($arg1, true, 'json');
     }
 
     /**

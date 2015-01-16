@@ -37,57 +37,56 @@ class FileLocator
      * @param string $schemaName
      * @param string $extension
      * @return string
-     * @throws RuntimeException
      */
     public function locateSchemaFile($schemaName, $extension)
     {
-        $schemaFileDirectory = $this->getSchemaFileDirectory();
-        $path = implode(DIRECTORY_SEPARATOR, [$schemaFileDirectory, $schemaName]) . '.' . $extension;
-        $this->validateFileExists(
-            $path,
-            "Schema file $schemaName.$extension cannot be located in $schemaFileDirectory"
-        );
+        $errorMessage = "Schema file $schemaName.$extension cannot be found";
 
-        return $path;
+        return $this->getFilePathFor('schema_file_dir', $schemaName, $extension, $errorMessage);
     }
 
     /**
      * @param string $fileName
      * @param string $extension
      * @return string
-     * @throws RuntimeException
+     */
+    public function locateRequestFile($fileName, $extension)
+    {
+        $errorMessage = "Request file $fileName.$extension cannot be found";
+
+        return $this->getFilePathFor('request_file_dir', $fileName, $extension, $errorMessage);
+    }
+
+    /**
+     * @param string $fileName
+     * @param string $extension
+     * @return string
      */
     public function locateResponseFile($fileName, $extension)
     {
-        $responseFileDirectory = $this->getResponseFileDirectory();
+        $errorMessage = "Response file $fileName.$extension cannot be found";
+
+        return $this->getFilePathFor('response_file_dir', $fileName, $extension, $errorMessage);
+    }
+
+    /**
+     * @param string $configName
+     * @param string $fileName
+     * @param string $extension
+     * @param string $errorMessage
+     * @return string
+     */
+    private function getFilePathFor($configName, $fileName, $extension, $errorMessage)
+    {
+        $responseFileDirectory = $this->getConfigValue($configName);
         $path = implode(DIRECTORY_SEPARATOR, [$responseFileDirectory, $fileName]) . '.' . $extension;
-        $this->validateFileExists(
-            $path,
-            "Response file $fileName.$extension cannot be located in $responseFileDirectory"
-        );
+        $this->validateFileExists($path, $errorMessage);
 
         return $path;
     }
 
     /**
-     * @return string
-     * @throws RuntimeException
-     */
-    private function getSchemaFileDirectory()
-    {
-        return $this->getConfigValue('schema_file_dir');
-    }
-
-    /**
-     * @return string
-     * @throws RuntimeException
-     */
-    private function getResponseFileDirectory()
-    {
-        return $this->getConfigValue('response_file_dir');
-    }
-
-    /**
+     * @param string $value
      * @return string
      * @throws RuntimeException
      */

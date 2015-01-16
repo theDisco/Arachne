@@ -85,12 +85,21 @@ class ArachneExtension implements Extension
         $this->loadContextInitializer($container);
     }
 
+    /**
+     * @param ContainerBuilder $container
+     * @param array $config
+     * @return void
+     */
     private function loadFileLocator(ContainerBuilder $container, array $config)
     {
-        $definition = new Definition('Arachne\FileSystem\FileLocator', [$config]);
+        $definition = new Definition('Arachne\FileSystem\FileLocator', array($config));
         $container->setDefinition(self::FILE_LOCATOR_REF, $definition);
     }
 
+    /**
+     * @param ContainerBuilder $container
+     * @return void
+     */
     private function loadValidationProvider(ContainerBuilder $container)
     {
         // TODO load before and provide configurable (json, xml) schema validation
@@ -104,20 +113,35 @@ class ArachneExtension implements Extension
         $container->setDefinition(self::VALIDATION_PROVIDER_REF, $definition);
     }
 
+    /**
+     * @param ContainerBuilder $container
+     * @param array $config
+     * @return void
+     */
     private function loadClient(ContainerBuilder $container, array $config)
     {
-        $definition = new Definition('Arachne\Http\Client\Guzzle', [$config['base_url']]);
+        $definition = new Definition(
+            'Arachne\Http\Client\Guzzle',
+            array(
+                $config['base_url'],
+                new Reference(self::FILE_LOCATOR_REF)
+            )
+        );
         $container->setDefinition(self::CLIENT_REF, $definition);
     }
 
+    /**
+     * @param ContainerBuilder $container
+     * @return void
+     */
     private function loadContextInitializer(ContainerBuilder $container)
     {
         $definition = new Definition(
             'Arachne\Context\Initializer\ArachneInitializer',
-            [
+            array(
                 new Reference(self::VALIDATION_PROVIDER_REF),
                 new Reference(self::CLIENT_REF),
-            ]
+            )
         );
         $definition->addTag(ContextExtension::INITIALIZER_TAG, array('priority' => 0));
         $container->setDefinition('arachne.context_initializer', $definition);

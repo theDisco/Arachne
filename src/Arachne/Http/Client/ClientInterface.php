@@ -11,6 +11,8 @@
 
 namespace Arachne\Http\Client;
 
+use Arachne\Http\Response;
+
 /**
  * Interface ClientInterface
  * @package Arachne\Http\Client
@@ -30,5 +32,16 @@ interface ClientInterface
      */
     public function setPath($path);
 
+    /**
+     * @param string $requestBody
+     * @param bool $isFromFile
+     * @param null|string $extension
+     * @return void
+     */
+    public function setRequestBody($requestBody, $isFromFile, $extension = null);
+
+    /**
+     * @return Response\ResponseInterface
+     */
     public function send();
 }
