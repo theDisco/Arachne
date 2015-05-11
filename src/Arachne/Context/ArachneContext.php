@@ -11,6 +11,7 @@
 
 namespace Arachne\Context;
 
+use Arachne\Auth;
 use Arachne\Exception;
 use Arachne\Http;
 use Arachne\Validation;
@@ -40,6 +41,11 @@ class ArachneContext implements Context
     private $validationProvider;
 
     /**
+     * @var Auth\BaseProvider
+     */
+    private $authProvider;
+
+    /**
      * @param Http\Client\ClientInterface $client
      * @return void
      */
@@ -67,6 +73,27 @@ class ArachneContext implements Context
     public function setValidationProvider(Validation\Provider $validationProvider)
     {
         $this->validationProvider = $validationProvider;
+    }
+
+    /**
+     * @param Auth\BaseProvider $authProvider
+     * @return void
+     */
+    public function setAuthProvider(Auth\BaseProvider $authProvider)
+    {
+        $this->authProvider = $authProvider;
+    }
+
+    /**
+     * @return Auth\BaseProvider
+     */
+    protected function getAuthProvider()
+    {
+        if (!$this->authProvider) {
+            throw new RuntimeException('In order to retrieve auth provider, you need to set up one');
+        }
+
+        return $this->authProvider;
     }
 
     /**

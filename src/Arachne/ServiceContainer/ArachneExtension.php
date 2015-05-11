@@ -29,6 +29,7 @@ class ArachneExtension implements Extension
 {
     const VALIDATION_PROVIDER_REF = 'arachne.ref.validation_provider';
     const CLIENT_REF = 'arachne.ref.client';
+    const AUTH_PROVIDER_REF = 'arachne.ref.auth_provider';
     const FILE_LOCATOR_REF = 'arachne.ref.file_locator';
 
     /**
@@ -61,14 +62,30 @@ class ArachneExtension implements Extension
         $builder
             ->children()
                 ->scalarNode('base_url')->isRequired()->end()
-                ->scalarNode('schema_file_dir')
-                    ->defaultValue('%paths.base%/schemas')
+                ->arrayNode('paths')
+                    ->children()
+                        ->scalarNode('schema_file_dir')
+                            ->defaultValue('%paths.base%/schemas')
+                        ->end()
+                        ->scalarNode('request_file_dir')
+                            ->defaultValue('%paths.base%/requests')
+                        ->end()
+                        ->scalarNode('response_file_dir')
+                            ->defaultValue('%paths.base%/responses')
+                        ->end()
+                    ->end()
                 ->end()
-                ->scalarNode('request_file_dir')
-                    ->defaultValue('%paths.base%/requests')
+                ->arrayNode('auth')
+                    ->children()
+                        ->variableNode('provider')
+                        ->end()
+                    ->end()
                 ->end()
-                ->scalarNode('response_file_dir')
-                    ->defaultValue('%paths.base%/responses')
+                ->arrayNode('http_client')
+                    ->children()
+                        ->variableNode('headers')
+                        ->end()
+                    ->end()
                 ->end()
             ->end()
         ->end();
@@ -79,9 +96,10 @@ class ArachneExtension implements Extension
      */
     public function load(ContainerBuilder $container, array $config)
     {
-        $this->loadFileLocator($container, $config);
+        $this->loadFileLocator($container, $config['paths']);
         $this->loadValidationProvider($container);
         $this->loadClient($container, $config);
+        $this->loadAuthProvider($container, $config);
         $this->loadContextInitializer($container);
     }
 
@@ -107,7 +125,8 @@ class ArachneExtension implements Extension
             'Arachne\Validation\Provider',
             array(
                 new Reference(self::FILE_LOCATOR_REF),
-                new Validation\Schema\JsonSchema
+                new Validation\Schema\JsonSchema,
+                'json'
             )
         );
         $container->setDefinition(self::VALIDATION_PROVIDER_REF, $definition);
@@ -132,6 +151,26 @@ class ArachneExtension implements Extension
 
     /**
      * @param ContainerBuilder $container
+     * @param array $config
+     * @return void
+     */
+    private function loadAuthProvider(ContainerBuilder $container, array $config)
+    {
+        if (!isset($config['auth']['provider'])) {
+            return;
+        }
+
+        $definition = new Definition(
+            $config['auth']['provider'],
+            array(
+                new Reference(self::CLIENT_REF),
+            )
+        );
+        $container->setDefinition(self::AUTH_PROVIDER_REF, $definition);
+    }
+
+    /**
+     * @param ContainerBuilder $container
      * @return void
      */
     private function loadContextInitializer(ContainerBuilder $container)
@@ -141,6 +180,7 @@ class ArachneExtension implements Extension
             array(
                 new Reference(self::VALIDATION_PROVIDER_REF),
                 new Reference(self::CLIENT_REF),
+                new Reference(self::AUTH_PROVIDER_REF),
             )
         );
         $definition->addTag(ContextExtension::INITIALIZER_TAG, array('priority' => 0));

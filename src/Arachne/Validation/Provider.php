@@ -36,13 +36,20 @@ class Provider
     private $fileLocator;
 
     /**
+     * @var string
+     */
+    private $type;
+
+    /**
      * @param FileLocator $fileLocator
      * @param Schema\ValidatorInterface $schemaValidator
+     * @param string $type
      */
-    public function __construct(FileLocator $fileLocator, Schema\ValidatorInterface $schemaValidator)
+    public function __construct(FileLocator $fileLocator, Schema\ValidatorInterface $schemaValidator, $type)
     {
         $this->fileLocator = $fileLocator;
         $this->schemaValidator = $schemaValidator;
+        $this->type = $type;
         $this->assertion = new Assert;
     }
 
@@ -53,7 +60,7 @@ class Provider
      */
     public function validateAgainstSchema($stringToValidate, $schemaName)
     {
-        $path = $this->fileLocator->locateSchemaFile($schemaName, $this->schemaValidator->getType());
+        $path = $this->fileLocator->locateSchemaFile($schemaName, $this->type);
         $this->schemaValidator->validateAgainstSchema($stringToValidate, $path);
     }
 
@@ -65,7 +72,7 @@ class Provider
     public function validateStringEqualsFile($stringToValidate, $fileName)
     {
         // TODO provide type based validation
-        $filePath = $this->fileLocator->locateResponseFile($fileName, $this->schemaValidator->getType());
+        $filePath = $this->fileLocator->locateResponseFile($fileName, $this->type);
         $this->assertion->assertJsonStringEqualsJsonFile($filePath, $stringToValidate);
     }
 }

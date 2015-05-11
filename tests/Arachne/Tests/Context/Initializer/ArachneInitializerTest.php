@@ -11,6 +11,7 @@
 
 namespace Arachne\Tests\Context\Initializer;
 
+use Arachne\Auth\DummyProvider;
 use Arachne\Context\Initializer\ArachneInitializer;
 use Arachne\Mocks;
 
@@ -29,7 +30,7 @@ class ArachneInitializerTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->initializer = new ArachneInitializer(
-            Mocks\Factory::createValidationProvider(),
+            Mocks\Factory::createValidationProvider('json'),
             Mocks\Factory::createHttpClient()
         );
     }
@@ -48,5 +49,22 @@ class ArachneInitializerTest extends \PHPUnit_Framework_TestCase
         $this->initializer->initializeContext($context);
         $this->assertInstanceOf('\Arachne\Http\Client\ClientInterface', $context->getHttpClient());
         $this->assertInstanceOf('\Arachne\Validation\Provider', $context->getValidationProvider());
+    }
+
+    public function testAuthenticateIfProviderPresent()
+    {
+        $httpClient = Mocks\Factory::createHttpClient();
+        $authProvider = new DummyProvider($httpClient);
+        $initializer = new ArachneInitializer(
+            Mocks\Factory::createValidationProvider('json'),
+            $httpClient,
+            $authProvider
+        );
+        $context = new Mocks\Context\TestContext;
+        $initializer->initializeContext($context);
+
+        $result = $authProvider->getResult();
+        $this->assertTrue($result['authenticated']);
+        $this->assertInstanceOf('\Arachne\Auth\DummyProvider', $context->getAuthProvider());
     }
 }

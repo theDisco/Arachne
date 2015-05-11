@@ -81,6 +81,18 @@ class Guzzle implements ClientInterface
             $request->setBody($this->requestBody);
         }
 
+        $this->reset();
+
         return new Response\Guzzle($client->send($request));
+    }
+
+    /**
+     * @return void
+     */
+    private function reset()
+    {
+        $this->path = null;
+        $this->requestMethod = null;
+        $this->requestBody = null;
     }
 }

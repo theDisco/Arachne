@@ -11,6 +11,7 @@
 
 namespace Arachne\Mocks\Context;
 
+use Arachne\Auth;
 use Arachne\Context\ArachneContext;
 use Arachne\Http;
 use Arachne\Validation;
@@ -36,5 +37,13 @@ class TestContext extends ArachneContext
     public function getValidationProvider()
     {
         return parent::getValidationProvider();
+    }
+
+    /**
+     * @return Auth\BaseProvider|null
+     */
+    public function getAuthProvider()
+    {
+        return parent::getAuthProvider();
     }
 }

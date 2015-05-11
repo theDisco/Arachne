@@ -29,12 +29,4 @@ class SchemaValidator implements ValidatorInterface
     {
         // TODO: Implement validateAgainstSchema() method.
     }
-
-    /**
-     * @return string
-     */
-    public function getType()
-    {
-        // TODO: Implement getType() method.
-    }
 }
