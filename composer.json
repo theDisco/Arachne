@@ -11,6 +11,7 @@
         }
     ],
     "require": {
+        "php": ">=5.4.0",
         "behat/behat": "~3.0.6",
         "guzzlehttp/guzzle": "~5.0",
         "justinrainbow/json-schema": "~1.3"
