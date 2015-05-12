@@ -11,6 +11,7 @@
 
 namespace Arachne\Tests\Context;
 
+use Arachne\Auth\DummyProvider;
 use Arachne\Context\ArachneContext;
 use Arachne\Mocks\Factory;
 use Arachne\Mocks\Http\Client;
@@ -89,5 +90,15 @@ class ArachneContextTest extends \PHPUnit_Framework_TestCase
         );
         $this->context->iSendTheRequest();
         $this->context->theStatusCodeShouldBe(400);
+    }
+
+    public function testPrepareAuthProvider()
+    {
+        $provider = new DummyProvider($this->client);
+        $provider->authenticate();
+        $this->context->setAuthProvider($provider);
+        $this->context->iSendTheRequest();
+
+        $this->assertTrue($provider->wasPrepared());
     }
 }

@@ -15,6 +15,7 @@ use Arachne\FileSystem\FileLocator;
 use Arachne\Http\Response;
 use GuzzleHttp\Client;
 use GuzzleHttp\Stream;
+use RuntimeException;
 
 /**
  * Class Guzzle
@@ -28,6 +29,7 @@ class Guzzle implements ClientInterface
     private $path;
     private $requestBody;
     private $fileLocator;
+    private $headers;
 
     /**
      * @param string $baseUrl
@@ -44,7 +46,7 @@ class Guzzle implements ClientInterface
      */
     public function setRequestMethod($method)
     {
-        assert(in_array($method, array('GET', 'POST', 'PUT', 'DELETE')));
+        assert(in_array($method, array('GET', 'POST', 'PUT', 'DELETE', 'PATCH')));
         $this->requestMethod = $method;
     }
 
@@ -59,7 +61,19 @@ class Guzzle implements ClientInterface
     /**
      * {@inheritDoc}
      */
-    public function setRequestBody($requestBody, $isFromFile, $extension = null)
+    public function addHeader($header, $value)
+    {
+        if (isset($this->headers[$header])) {
+            throw new RuntimeException("Header `$header` was already set");
+        }
+
+        $this->headers[$header] = $value;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function setRequestBody($requestBody, $isFromFile = false, $extension = null)
     {
         if ($isFromFile) {
             $path = $this->fileLocator->locateRequestFile($requestBody, $extension);
@@ -81,6 +95,10 @@ class Guzzle implements ClientInterface
             $request->setBody($this->requestBody);
         }
 
+        if ($this->headers) {
+            $request->addHeaders($this->headers);
+        }
+
         $this->reset();
 
         return new Response\Guzzle($client->send($request));
@@ -94,5 +112,6 @@ class Guzzle implements ClientInterface
         $this->path = null;
         $this->requestMethod = null;
         $this->requestBody = null;
+        $this->headers = [];
     }
 }

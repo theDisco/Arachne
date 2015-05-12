@@ -81,12 +81,6 @@ class ArachneExtension implements Extension
                         ->end()
                     ->end()
                 ->end()
-                ->arrayNode('http_client')
-                    ->children()
-                        ->variableNode('headers')
-                        ->end()
-                    ->end()
-                ->end()
             ->end()
         ->end();
     }

@@ -8,9 +8,6 @@ default:
         response_file_dir: %paths.base%/responses
       auth:
         provider: Arachne\Auth\DummyProvider
-      http_client:
-        headers:
-          - Content-Type: application/json
   suites:
     json:
       contexts:

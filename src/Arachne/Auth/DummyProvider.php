@@ -11,6 +11,8 @@
 
 namespace Arachne\Auth;
 
+use Arachne\Http\Client\ClientInterface;
+
 /**
  * Class DummyProvider
  * @package Arachne\Auth
@@ -19,6 +21,7 @@ namespace Arachne\Auth;
 class DummyProvider extends BaseProvider
 {
     private $authenticated = false;
+    private $prepared = false;
 
     /**
      * {@inheritDoc}
@@ -31,12 +34,27 @@ class DummyProvider extends BaseProvider
     }
 
     /**
-     * {@inheritDoc}
+     * @param ClientInterface $client
+     * @return void
      */
-    public function getResult()
+    public function prepare(ClientInterface $client)
     {
-        return [
-            'authenticated' => $this->authenticated,
-        ];
+        $this->prepared = true;
+    }
+
+    /**
+     * @return bool
+     */
+    public function wasAuthenticated()
+    {
+        return $this->authenticated;
+    }
+
+    /**
+     * @return bool
+     */
+    public function wasPrepared()
+    {
+        return $this->prepared;
     }
 }

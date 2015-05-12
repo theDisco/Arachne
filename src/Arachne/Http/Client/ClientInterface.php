@@ -33,12 +33,19 @@ interface ClientInterface
     public function setPath($path);
 
     /**
+     * @param string $header
+     * @param string $value
+     * @return void
+     */
+    public function addHeader($header, $value);
+
+    /**
      * @param string $requestBody
      * @param bool $isFromFile
      * @param null|string $extension
      * @return void
      */
-    public function setRequestBody($requestBody, $isFromFile, $extension = null);
+    public function setRequestBody($requestBody, $isFromFile = false, $extension = null);
 
     /**
      * @return Response\ResponseInterface

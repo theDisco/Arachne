@@ -38,12 +38,4 @@ class TestContext extends ArachneContext
     {
         return parent::getValidationProvider();
     }
-
-    /**
-     * @return Auth\BaseProvider|null
-     */
-    public function getAuthProvider()
-    {
-        return parent::getAuthProvider();
-    }
 }

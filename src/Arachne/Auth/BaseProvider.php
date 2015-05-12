@@ -51,7 +51,8 @@ abstract class BaseProvider
     abstract public function authenticate();
 
     /**
-     * @return mixed
+     * @param ClientInterface $client
+     * @return void
      */
-    abstract public function getResult();
+    abstract public function prepare(ClientInterface $client);
 }

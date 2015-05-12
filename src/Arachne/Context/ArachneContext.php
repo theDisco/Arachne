@@ -85,18 +85,6 @@ class ArachneContext implements Context
     }
 
     /**
-     * @return Auth\BaseProvider
-     */
-    protected function getAuthProvider()
-    {
-        if (!$this->authProvider) {
-            throw new RuntimeException('In order to retrieve auth provider, you need to set up one');
-        }
-
-        return $this->authProvider;
-    }
-
-    /**
      * @Given I use :arg1 request method
      */
     public function iUseRequestMethod($arg1)
@@ -126,7 +114,13 @@ class ArachneContext implements Context
      */
     public function iSendTheRequest()
     {
-        $this->response = $this->getHttpClient()->send();
+        $client = $this->getHttpClient();
+
+        if ($this->authProvider) {
+            $this->authProvider->prepare($client);
+        }
+
+        $this->response = $client->send();
     }
 
     /**

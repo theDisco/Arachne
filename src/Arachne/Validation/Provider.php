@@ -71,7 +71,7 @@ class Provider
      */
     public function validateStringEqualsFile($stringToValidate, $fileName)
     {
-        // TODO provide type based validation
+        // TODO provide type based validation through strategies
         $filePath = $this->fileLocator->locateResponseFile($fileName, $this->type);
         $this->assertion->assertJsonStringEqualsJsonFile($filePath, $stringToValidate);
     }

@@ -63,8 +63,6 @@ class ArachneInitializerTest extends \PHPUnit_Framework_TestCase
         $context = new Mocks\Context\TestContext;
         $initializer->initializeContext($context);
 
-        $result = $authProvider->getResult();
-        $this->assertTrue($result['authenticated']);
-        $this->assertInstanceOf('\Arachne\Auth\DummyProvider', $context->getAuthProvider());
+        $this->assertTrue($authProvider->wasAuthenticated());
     }
 }
