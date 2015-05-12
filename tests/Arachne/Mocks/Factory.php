@@ -52,13 +52,15 @@ class Factory
     }
 
     /**
+     * @param string $type
      * @return Provider
      */
-    public static function createValidationProvider()
+    public static function createValidationProvider($type)
     {
         return new Provider(
             self::createFileLocator(),
-            self::createSchemaValidator()
+            self::createSchemaValidator(),
+            $type
         );
     }
 }

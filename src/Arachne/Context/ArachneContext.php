@@ -11,6 +11,7 @@
 
 namespace Arachne\Context;
 
+use Arachne\Auth;
 use Arachne\Exception;
 use Arachne\Http;
 use Arachne\Validation;
@@ -38,6 +39,11 @@ class ArachneContext implements Context
      * @var Validation\Provider
      */
     private $validationProvider;
+
+    /**
+     * @var Auth\BaseProvider
+     */
+    private $authProvider;
 
     /**
      * @param Http\Client\ClientInterface $client
@@ -70,6 +76,15 @@ class ArachneContext implements Context
     }
 
     /**
+     * @param Auth\BaseProvider $authProvider
+     * @return void
+     */
+    public function setAuthProvider(Auth\BaseProvider $authProvider)
+    {
+        $this->authProvider = $authProvider;
+    }
+
+    /**
      * @Given I use :arg1 request method
      */
     public function iUseRequestMethod($arg1)
@@ -99,7 +114,13 @@ class ArachneContext implements Context
      */
     public function iSendTheRequest()
     {
-        $this->response = $this->getHttpClient()->send();
+        $client = $this->getHttpClient();
+
+        if ($this->authProvider) {
+            $this->authProvider->prepare($client);
+        }
+
+        $this->response = $client->send();
     }
 
     /**

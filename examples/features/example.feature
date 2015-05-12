@@ -1,7 +1,7 @@
-Feature: twitter sample
+Feature: Fake JSON API sample
   In order for extension to work
   As an API user
-  I need to be able to retrieve twitter sample
+  I need to be able to interact with Fake JSON API
 
   Scenario:
     Given I use "GET" request method

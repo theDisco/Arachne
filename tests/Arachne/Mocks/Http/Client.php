@@ -73,9 +73,17 @@ class Client implements ClientInterface
     }
 
     /**
+     * @param string $header
+     * @param string $value
+     * @return void
+     */
+    public function addHeader($header, $value)
+    {}
+
+    /**
      * {@inheritDoc}
      */
-    public function setRequestBody($requestBody, $isFromFile, $extension = null)
+    public function setRequestBody($requestBody, $isFromFile = false, $extension = null)
     {
         $this->requestBody = array(
             'requestBody' => $requestBody,

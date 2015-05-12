@@ -24,9 +24,4 @@ interface ValidatorInterface
      * @return void
      */
     public function validateAgainstSchema($stringToValidate, $schemaFile);
-
-    /**
-     * @return string
-     */
-    public function getType();
 }

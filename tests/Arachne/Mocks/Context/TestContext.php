@@ -11,6 +11,7 @@
 
 namespace Arachne\Mocks\Context;
 
+use Arachne\Auth;
 use Arachne\Context\ArachneContext;
 use Arachne\Http;
 use Arachne\Validation;
