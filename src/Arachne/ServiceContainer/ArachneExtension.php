@@ -31,6 +31,7 @@ class ArachneExtension implements Extension
     const CLIENT_REF = 'arachne.ref.client';
     const AUTH_PROVIDER_REF = 'arachne.ref.auth_provider';
     const FILE_LOCATOR_REF = 'arachne.ref.file_locator';
+    const CONTEXT_INITIALIZER = 'arachne.context_initializer';
 
     /**
      * {@inheritDoc}
@@ -169,15 +170,21 @@ class ArachneExtension implements Extension
      */
     private function loadContextInitializer(ContainerBuilder $container)
     {
+        $authProvider = null;
+
+        if ($container->hasDefinition(self::AUTH_PROVIDER_REF)) {
+            $authProvider = new Reference(self::AUTH_PROVIDER_REF);
+        }
+
         $definition = new Definition(
             'Arachne\Context\Initializer\ArachneInitializer',
             array(
                 new Reference(self::VALIDATION_PROVIDER_REF),
                 new Reference(self::CLIENT_REF),
-                new Reference(self::AUTH_PROVIDER_REF),
+                $authProvider,
             )
         );
         $definition->addTag(ContextExtension::INITIALIZER_TAG, array('priority' => 0));
-        $container->setDefinition('arachne.context_initializer', $definition);
+        $container->setDefinition(self::CONTEXT_INITIALIZER, $definition);
     }
 }
