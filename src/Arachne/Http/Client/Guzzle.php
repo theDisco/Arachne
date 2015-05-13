@@ -14,6 +14,7 @@ namespace Arachne\Http\Client;
 use Arachne\FileSystem\FileLocator;
 use Arachne\Http\Response;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception;
 use GuzzleHttp\Stream;
 use RuntimeException;
 
@@ -30,6 +31,7 @@ class Guzzle implements ClientInterface
     private $requestBody;
     private $fileLocator;
     private $headers;
+    private $beforeRequestCallback;
 
     /**
      * @param string $baseUrl
@@ -89,6 +91,11 @@ class Guzzle implements ClientInterface
     public function send()
     {
         $client = new Client;
+
+        if ($this->beforeRequestCallback) {
+            call_user_func($this->beforeRequestCallback, $client);
+        }
+
         $request = $client->createRequest($this->requestMethod, $this->baseUrl . $this->path);
 
         if ($this->requestBody) {
@@ -101,7 +108,22 @@ class Guzzle implements ClientInterface
 
         $this->reset();
 
-        return new Response\Guzzle($client->send($request));
+        try {
+            $response = $client->send($request);
+        } catch (Exception\ClientException $exception) {
+            $response = $exception->getResponse();
+        }
+
+        return new Response\Guzzle($response);
+    }
+
+    /**
+     * @param callable $callback
+     * @return void
+     */
+    public function beforeRequest(callable $callback)
+    {
+        $this->beforeRequestCallback = $callback;
     }
 
     /**

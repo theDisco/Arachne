@@ -11,7 +11,7 @@
 
 namespace Arachne\Http\Response;
 
-use GuzzleHttp\Message\Response;
+use GuzzleHttp\Message\ResponseInterface as Response;
 
 /**
  * Class Guzzle
