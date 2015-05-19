@@ -3,7 +3,7 @@
 
 declare(ticks = 1);
 
-require '../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 $address = '127.0.0.1';
 $port = 8899;
