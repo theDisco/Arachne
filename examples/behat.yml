@@ -15,4 +15,4 @@ default:
       contexts:
         - Arachne\Context\ArachneContext:
           - headers:
-              X-Example-Header: Example Value
+            X-Example-Header: Example Value
