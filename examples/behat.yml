@@ -11,4 +11,6 @@ default:
   suites:
     json:
       contexts:
-        - Arachne\Context\ArachneContext
+        - Arachne\Context\ArachneContext:
+          - headers:
+              X-Example-Header: Example Value

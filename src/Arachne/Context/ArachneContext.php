@@ -46,6 +46,21 @@ class ArachneContext implements Context
     private $authProvider;
 
     /**
+     * @var array
+     */
+    private $defaultHeaders;
+
+    /**
+     * @param array $params
+     */
+    public function __construct(array $params = [])
+    {
+        if (isset($params['headers']) && is_array($params['headers'])) {
+            $this->defaultHeaders = $params['headers'];
+        }
+    }
+
+    /**
      * @param Http\Client\ClientInterface $client
      * @return void
      */
@@ -118,6 +133,12 @@ class ArachneContext implements Context
 
         if ($this->authProvider) {
             $this->authProvider->prepare($client);
+        }
+
+        if ($this->defaultHeaders) {
+            foreach ($this->defaultHeaders as $header => $value) {
+                $client->addHeader($header, $value);
+            }
         }
 
         $this->response = $client->send();

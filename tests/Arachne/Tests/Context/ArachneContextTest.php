@@ -101,4 +101,14 @@ class ArachneContextTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($provider->wasPrepared());
     }
+
+    public function testAddDefaultHeaders()
+    {
+        $client = Factory::createHttpClient();
+        $context = new ArachneContext(['headers' => ['X-Test-Header' => 'Test-Value']]);
+        $context->setHttpClient($client);
+        $context->iSendTheRequest();
+
+        $this->assertEquals(['X-Test-Header' => 'Test-Value'], $client->getHeaders());
+    }
 }
