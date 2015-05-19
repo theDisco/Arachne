@@ -43,7 +43,7 @@ default:
       contexts:
         - Arachne\Context\ArachneContext
           - headers:
-            X-Example-Header: Example Value
+              X-Example-Header: Example Value
 ```
 
 In order to enable the extension, you need to add it to the extensions node of your config. 
@@ -223,7 +223,7 @@ default:
       contexts:
         - Arachne\Context\ArachneContext:
           - headers:
-            X-Example-Header: Example Value
+              X-Example-Header: Example Value
 ```
 
 If you use custom context, make sure to call the constructor of `ArachneContext`.
