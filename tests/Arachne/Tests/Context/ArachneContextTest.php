@@ -101,4 +101,45 @@ class ArachneContextTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($provider->wasPrepared());
     }
+
+    /**
+     * @dataProvider createContextWithHeader
+     */
+    public function testAddDefaultHeaders(ArachneContext $context, Client $client)
+    {
+        $context->iSendTheRequest();
+
+        $this->assertEquals(['X-Test-Header' => 'Test-Value'], $client->getHeaders());
+    }
+
+    /**
+     * @dataProvider createContextWithHeader
+     */
+    public function testFeatureCanOverwriteDefaultHeader(ArachneContext $context, Client $client)
+    {
+        $context->iSetTheHeaderTo('X-Test-Header', 'Test-Value-Overwritten');
+        $context->iSendTheRequest();
+
+        $this->assertEquals(['X-Test-Header' => 'Test-Value-Overwritten'], $client->getHeaders());
+    }
+
+    /**
+     * @dataProvider createContextWithHeader
+     */
+    public function testInitializerOverwritesDefaultHeaders(ArachneContext $context, Client $client)
+    {
+        $context->addDefaultHeaders(['X-Test-Header' => 'Test-Value-Overwritten-Config']);
+        $context->iSendTheRequest();
+
+        $this->assertEquals(['X-Test-Header' => 'Test-Value-Overwritten-Config'], $client->getHeaders());
+    }
+
+    public function createContextWithHeader()
+    {
+        $client = Factory::createHttpClient();
+        $context = new ArachneContext(['headers' => ['X-Test-Header' => 'Test-Value']]);
+        $context->setHttpClient($client);
+
+        return [[$context, $client]];
+    }
 }

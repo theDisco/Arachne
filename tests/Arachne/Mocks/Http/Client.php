@@ -33,6 +33,11 @@ class Client implements ClientInterface
     /**
      * @var array
      */
+    private $headers;
+
+    /**
+     * @var array
+     */
     private $requestBody;
 
     /**
@@ -78,7 +83,17 @@ class Client implements ClientInterface
      * @return void
      */
     public function addHeader($header, $value)
-    {}
+    {
+        $this->headers[$header] = $value;
+    }
+
+    /**
+     * @return array
+     */
+    public function getHeaders()
+    {
+        return $this->headers;
+    }
 
     /**
      * {@inheritDoc}

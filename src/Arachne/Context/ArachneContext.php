@@ -46,6 +46,21 @@ class ArachneContext implements Context
     private $authProvider;
 
     /**
+     * @var array
+     */
+    private $defaultHeaders = [];
+
+    /**
+     * @param array $params
+     */
+    public function __construct(array $params = [])
+    {
+        if (isset($params['headers']) && is_array($params['headers'])) {
+            $this->defaultHeaders = $params['headers'];
+        }
+    }
+
+    /**
      * @param Http\Client\ClientInterface $client
      * @return void
      */
@@ -85,6 +100,15 @@ class ArachneContext implements Context
     }
 
     /**
+     * @param array $headers
+     * @return void
+     */
+    public function addDefaultHeaders(array $headers)
+    {
+        $this->defaultHeaders = array_merge($this->defaultHeaders, $headers);
+    }
+
+    /**
      * @Given I use :arg1 request method
      */
     public function iUseRequestMethod($arg1)
@@ -101,12 +125,20 @@ class ArachneContext implements Context
     }
 
     /**
-     * @When I use the :arg file as request body
+     * @When I use the :arg1 file as request body
      */
     public function iUseTheFileAsRequestBody($arg1)
     {
         // TODO web service type should not come from schema validator
         $this->getHttpClient()->setRequestBody($arg1, true, 'json');
+    }
+
+    /**
+     * @When I set the header :arg1 to :arg2
+     */
+    public function iSetTheHeaderTo($arg1, $arg2)
+    {
+        $this->addDefaultHeaders([$arg1 => $arg2]);
     }
 
     /**
@@ -118,6 +150,12 @@ class ArachneContext implements Context
 
         if ($this->authProvider) {
             $this->authProvider->prepare($client);
+        }
+
+        if ($this->defaultHeaders) {
+            foreach ($this->defaultHeaders as $header => $value) {
+                $client->addHeader($header, $value);
+            }
         }
 
         $this->response = $client->send();
@@ -190,10 +228,7 @@ class ArachneContext implements Context
      */
     public function responseShouldValidateAgainstSchema($arg1)
     {
-        $this->getValidationProvider()->validateAgainstSchema(
-            $this->response->getBody(),
-            $arg1
-        );
+        $this->getValidationProvider()->validateAgainstSchema($this->response->getBody(), $arg1);
     }
 
     /**

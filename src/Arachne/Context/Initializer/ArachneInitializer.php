@@ -41,18 +41,26 @@ class ArachneInitializer implements ContextInitializer
     private $authProvider;
 
     /**
+     * @var array
+     */
+    private $defaultHeaders;
+
+    /**
      * @param Provider $validationProvider
      * @param ClientInterface $httpClient
      * @param BaseProvider|null $authProvider
+     * @param array $defaultHeaders
      */
     public function __construct(
         Provider $validationProvider,
         ClientInterface $httpClient,
-        BaseProvider $authProvider = null
+        BaseProvider $authProvider = null,
+        array $defaultHeaders = array()
     ) {
         $this->validationProvider = $validationProvider;
         $this->httpClient = $httpClient;
         $this->authProvider = $authProvider;
+        $this->defaultHeaders = $defaultHeaders;
     }
 
     /**
@@ -67,6 +75,10 @@ class ArachneInitializer implements ContextInitializer
         if ($this->authProvider) {
             $this->authProvider->authenticate();
             $context->setAuthProvider($this->authProvider);
+        }
+
+        if ($this->defaultHeaders) {
+            $context->addDefaultHeaders($this->defaultHeaders);
         }
 
         $context->setValidationProvider($this->validationProvider);

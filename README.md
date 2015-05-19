@@ -36,10 +36,14 @@ default:
         response_file_dir: %paths.base%/responses
       auth:
         provider: Arachne\Auth\DummyProvider
+      headers:
+        Authorization: Token token=123456
   suites:
     json:
       contexts:
         - Arachne\Context\ArachneContext
+          - headers:
+            X-Example-Header: Example Value
 ```
 
 In order to enable the extension, you need to add it to the extensions node of your config. 
@@ -105,10 +109,17 @@ which folder are the response files located in. In this case, Arachne will look 
 
 **auth.priovider**
 
-Some of the webservices require some kind of persistance between the requests. In order to do that you can
+Some of the web services require some kind of persistance between the requests. In order to do that you can
 use an authentication provider to perform authentication before the test starts and provide its result to the
 context. Use this config variable, to tell Arachne to use authentication provider before the test will start.
 You can read more about authentication providers below.
+
+**headers**
+
+Not all web services are open and many of them require authorization. Web services also use versioning of the
+resources. That's where headers come in play. This configuration allows you to set headers that will be send with
+each request. This configuration variable supports any amount of headers you want to be send with each request.
+To understand how the headers are set, read the headers section below.
 
 Steps
 =====
@@ -127,6 +138,10 @@ Sets the path for the request.
 **I use the ".*" file as request body**
 
 Uses the content of the file as a request body.
+
+I set the header ".*" to ".*"
+
+Sets a header to a provided value. Read more about headers below to understand the dependencies.
 
 **I send the request**
 
@@ -192,6 +207,60 @@ class LoginProvider extends BaseProvider
         $client->addHeader('X-Session-Token', $this->sessionToken);
     }
 }
+```
+
+Headers
+=======
+
+There are multiple ways of setting headers. In the first step headers will be set during initialization of the
+context and passed to the constructor of the context. You can pass the headers through the context configuration in
+the suite.
+
+```yml
+default:
+  suites:
+    json:
+      contexts:
+        - Arachne\Context\ArachneContext:
+          - headers:
+            X-Example-Header: Example Value
+```
+
+If you use custom context, make sure to call the constructor of `ArachneContext`.
+
+```php
+use Arachne\Context\ArachneContext
+
+class MyContext extends ArachneContext
+{
+    public function __construct(array $params)
+    {
+        // ... process some custom params
+        parent::__construct($params);
+    }
+}
+```
+
+You can also set up header in the extension configuration.
+
+```yml
+default:
+  extensions:
+    Arachne\ServiceContainer\ArachneExtension:
+      headers:
+        Authorization: Token token=123456
+```
+
+Any header set in the extension configuration will overwrite the header provided during context initialization.
+This is a good place to set your authorization or accept headers, because they will be passed to each request.
+
+Headers can also be passed directly in the feature. Any headers provided in the feature will overwrite the headers
+set before in extension config or initilization param.
+
+```yml
+# ...
+    And I set the header "Accept" to "application/vnd.arachne.v1"
+# ...
 ```
 
 How To Run Example
