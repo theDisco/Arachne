@@ -195,9 +195,25 @@ class ArachneContext implements Context
         json_decode($this->getResponse()->getBody());
 
         if (json_last_error() > 0) {
-            throw new Exception\InvalidJson(
-                sprintf('Response is not a valid JSON: %s', json_last_error_msg())
-            );
+            switch (json_last_error()) {
+                case JSON_ERROR_DEPTH:
+                    $error = 'The maximum stack depth has been exceeded';
+                    break;
+                case JSON_ERROR_STATE_MISMATCH:
+                    $error = 'Invalid or malformed JSON';
+                    break;
+                case JSON_ERROR_CTRL_CHAR:
+                    $error = 'Control character error, possibly incorrectly encoded';
+                    break;
+                case JSON_ERROR_SYNTAX:
+                    $error = 'Syntax error';
+                    break;
+                default:
+                    $error = 'Unknown error';
+                    break;
+            }
+
+            throw new Exception\InvalidJson(sprintf('Response is not a valid JSON: %s', $error));
         }
     }
 
