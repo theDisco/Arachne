@@ -23,6 +23,7 @@ Feature: Fake JSON API sample
     Given I use "POST" request method
     When I access the resource url "/one/two"
     And I use the "one_two" file as request body
+    And I set the header "Authorization" to "Token token=123456"
     And I send the request
     Then the status code should be 200
     And response should be a valid JSON

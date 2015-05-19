@@ -116,12 +116,20 @@ class ArachneContext implements Context
     }
 
     /**
-     * @When I use the :arg file as request body
+     * @When I use the :arg1 file as request body
      */
     public function iUseTheFileAsRequestBody($arg1)
     {
         // TODO web service type should not come from schema validator
         $this->getHttpClient()->setRequestBody($arg1, true, 'json');
+    }
+
+    /**
+     * @When I set the header :arg1 to :arg2
+     */
+    public function iSetTheHeaderTo($arg1, $arg2)
+    {
+        $this->defaultHeaders[$arg1] = $arg2;
     }
 
     /**
