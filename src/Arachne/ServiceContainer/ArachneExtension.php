@@ -62,7 +62,9 @@ class ArachneExtension implements Extension
     {
         $builder
             ->children()
-                ->scalarNode('base_url')->isRequired()->end()
+                ->scalarNode('base_url')
+                    ->isRequired()
+                ->end()
                 ->arrayNode('paths')
                     ->children()
                         ->scalarNode('schema_file_dir')
@@ -82,6 +84,8 @@ class ArachneExtension implements Extension
                         ->end()
                     ->end()
                 ->end()
+                ->variableNode('headers')
+                ->end()
             ->end()
         ->end();
     }
@@ -95,7 +99,7 @@ class ArachneExtension implements Extension
         $this->loadValidationProvider($container);
         $this->loadClient($container, $config);
         $this->loadAuthProvider($container, $config);
-        $this->loadContextInitializer($container);
+        $this->loadContextInitializer($container, $config);
     }
 
     /**
@@ -166,14 +170,20 @@ class ArachneExtension implements Extension
 
     /**
      * @param ContainerBuilder $container
+     * @param array $config
      * @return void
      */
-    private function loadContextInitializer(ContainerBuilder $container)
+    private function loadContextInitializer(ContainerBuilder $container, array $config)
     {
         $authProvider = null;
+        $defaultHeaders = [];
 
         if ($container->hasDefinition(self::AUTH_PROVIDER_REF)) {
             $authProvider = new Reference(self::AUTH_PROVIDER_REF);
+        }
+
+        if (isset($config['headers']) && is_array($config['headers'])) {
+            $defaultHeaders = $config['headers'];
         }
 
         $definition = new Definition(
@@ -182,6 +192,7 @@ class ArachneExtension implements Extension
                 new Reference(self::VALIDATION_PROVIDER_REF),
                 new Reference(self::CLIENT_REF),
                 $authProvider,
+                $defaultHeaders,
             )
         );
         $definition->addTag(ContextExtension::INITIALIZER_TAG, array('priority' => 0));

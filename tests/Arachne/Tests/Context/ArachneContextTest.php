@@ -123,6 +123,17 @@ class ArachneContextTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['X-Test-Header' => 'Test-Value-Overwritten'], $client->getHeaders());
     }
 
+    /**
+     * @dataProvider createContextWithHeader
+     */
+    public function testInitializerOverwritesDefaultHeaders(ArachneContext $context, Client $client)
+    {
+        $context->addDefaultHeaders(['X-Test-Header' => 'Test-Value-Overwritten-Config']);
+        $context->iSendTheRequest();
+
+        $this->assertEquals(['X-Test-Header' => 'Test-Value-Overwritten-Config'], $client->getHeaders());
+    }
+
     public function createContextWithHeader()
     {
         $client = Factory::createHttpClient();

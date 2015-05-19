@@ -65,4 +65,20 @@ class ArachneInitializerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($authProvider->wasAuthenticated());
     }
+
+    public function testSetHeadersIfHeadersPresentInConfig()
+    {
+        $httpClient = Mocks\Factory::createHttpClient();
+        $initializer = new ArachneInitializer(
+            Mocks\Factory::createValidationProvider('json'),
+            $httpClient,
+            null,
+            ['X-Test-Header' => 'Test Value']
+        );
+        $context = new Mocks\Context\TestContext;
+        $initializer->initializeContext($context);
+        $context->iSendTheRequest();
+
+        $this->assertEquals(['X-Test-Header' => 'Test Value'], $httpClient->getHeaders());
+    }
 }

@@ -8,6 +8,8 @@ default:
         response_file_dir: %paths.base%/responses
       auth:
         provider: Arachne\Auth\DummyProvider
+      headers:
+        Authorization: Token token=123456
   suites:
     json:
       contexts:

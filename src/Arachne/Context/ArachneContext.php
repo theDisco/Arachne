@@ -48,7 +48,7 @@ class ArachneContext implements Context
     /**
      * @var array
      */
-    private $defaultHeaders;
+    private $defaultHeaders = [];
 
     /**
      * @param array $params
@@ -100,6 +100,15 @@ class ArachneContext implements Context
     }
 
     /**
+     * @param array $headers
+     * @return void
+     */
+    public function addDefaultHeaders(array $headers)
+    {
+        $this->defaultHeaders = array_merge($this->defaultHeaders, $headers);
+    }
+
+    /**
      * @Given I use :arg1 request method
      */
     public function iUseRequestMethod($arg1)
@@ -129,7 +138,7 @@ class ArachneContext implements Context
      */
     public function iSetTheHeaderTo($arg1, $arg2)
     {
-        $this->defaultHeaders[$arg1] = $arg2;
+        $this->addDefaultHeaders([$arg1 => $arg2]);
     }
 
     /**
@@ -219,10 +228,7 @@ class ArachneContext implements Context
      */
     public function responseShouldValidateAgainstSchema($arg1)
     {
-        $this->getValidationProvider()->validateAgainstSchema(
-            $this->response->getBody(),
-            $arg1
-        );
+        $this->getValidationProvider()->validateAgainstSchema($this->response->getBody(), $arg1);
     }
 
     /**
