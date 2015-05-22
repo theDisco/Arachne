@@ -39,6 +39,14 @@ class GuzzleTest extends \PHPUnit_Framework_TestCase
         $response = $client->send();
         $this->assertSame(404, $response->getStatusCode());
         $this->assertSame('not_existent', $response->getBody());
+    }
 
+    public function testPrintWarningIfHeaderGetOverwritten()
+    {
+        $this->expectOutputString('Overwriting header `X-Test` with `test` (previous value `testing`)');
+
+        $client = new Guzzle('http://www.example.com', Factory::createFileLocator());
+        $client->addHeader('X-Test', 'testing');
+        $client->addHeader('X-Test', 'test');
     }
 }

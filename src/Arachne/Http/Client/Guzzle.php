@@ -66,7 +66,7 @@ class Guzzle implements ClientInterface
     public function addHeader($header, $value)
     {
         if (isset($this->headers[$header])) {
-            throw new RuntimeException("Header `$header` was already set");
+            echo "Overwriting header `$header` with `$value` (previous value `{$this->headers[$header]}`)";
         }
 
         $this->headers[$header] = $value;
