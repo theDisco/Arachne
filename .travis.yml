@@ -14,5 +14,4 @@ before_script:
 
 script:
   - vendor/bin/phpunit --coverage-text
-  - php bin/server.php &
   - cd examples && ../vendor/bin/behat

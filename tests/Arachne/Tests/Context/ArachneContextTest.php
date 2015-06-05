@@ -142,4 +142,15 @@ class ArachneContextTest extends \PHPUnit_Framework_TestCase
 
         return [[$context, $client]];
     }
+
+    public function testDoNotPerformAuthIfAnonymousUser()
+    {
+        $provider = new DummyProvider($this->client);
+        $provider->authenticate();
+        $this->context->setAuthProvider($provider);
+        $this->context->iAmAnAnonymousUser();
+        $this->context->iSendTheRequest();
+
+        $this->assertFalse($provider->wasPrepared());
+    }
 }

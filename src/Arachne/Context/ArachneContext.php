@@ -51,6 +51,11 @@ class ArachneContext implements Context
     private $defaultHeaders = [];
 
     /**
+     * @var bool
+     */
+    private $performAuth = true;
+
+    /**
      * @param array $params
      */
     public function __construct(array $params = [])
@@ -109,6 +114,14 @@ class ArachneContext implements Context
     }
 
     /**
+     * @Given I am an anonymous user
+     */
+    public function iAmAnAnonymousUser()
+    {
+        $this->performAuth = false;
+    }
+
+    /**
      * @Given I use :arg1 request method
      */
     public function iUseRequestMethod($arg1)
@@ -148,7 +161,7 @@ class ArachneContext implements Context
     {
         $client = $this->getHttpClient();
 
-        if ($this->authProvider) {
+        if ($this->authProvider && $this->performAuth) {
             $this->authProvider->prepare($client);
         }
 

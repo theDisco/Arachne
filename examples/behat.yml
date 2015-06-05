@@ -1,7 +1,7 @@
 default:
   extensions:
     Arachne\ServiceContainer\ArachneExtension:
-      base_url: http://localhost:8899
+      base_url: http://echo.jsontest.com
       paths:
         schema_file_dir: %paths.base%/schemas
         request_file_dir: %paths.base%/requests

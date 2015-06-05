@@ -4,7 +4,8 @@ Feature: Fake JSON API sample
   I need to be able to interact with Fake JSON API
 
   Scenario:
-    Given I use "GET" request method
+    Given I am an anonymous user
+    And I use "GET" request method
     When I access the resource url "/key/value"
     And I send the request
     Then the status code should be 200

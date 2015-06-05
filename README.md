@@ -127,6 +127,12 @@ Steps
 Given/When
 ----------
 
+**I am an anonymous user**
+ 
+If Arachne was set up to use Auth Provider, you can force the current scenario _not_ to pass the current client to the
+`prepare` method of Auth Provider and therefore omit the authentication. This is useful if you are testing the error responses
+for not registered users or perform authentication.
+
 **I use ".*" request method**
 
 Sets the request method to the provided http verb.
@@ -139,7 +145,7 @@ Sets the path for the request.
 
 Uses the content of the file as a request body.
 
-I set the header ".*" to ".*"
+**I set the header ".*" to ".*"**
 
 Sets a header to a provided value. Read more about headers below to understand the dependencies.
 
