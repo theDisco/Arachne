@@ -10,7 +10,7 @@ Feature: Fake XML API sample
     And I send the request
     Then the status code should be 200
     And response should be a valid XML
-    And response should validate against "one_two.xml" schema
+    And response should validate against "one_two.xsd" schema
     And response should be identical to "one_two.xml" file
 
   Scenario:
@@ -20,7 +20,7 @@ Feature: Fake XML API sample
     Then the status code should be 200
     And response should be a valid XML
     And response header "Server" should contain "Google Frontend"
-    And response should validate against "one_two.xml" schema
+    And response should validate against "one_two.xsd" schema
 
   Scenario:
     Given I use "POST" request method
@@ -30,5 +30,5 @@ Feature: Fake XML API sample
     And I send the request
     Then the status code should be 200
     And response should be a valid XML
-    And response should validate against "one_two.xml" schema
+    And response should validate against "one_two.xsd" schema
     And response should be identical to "one_two.xml" file

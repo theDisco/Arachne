@@ -24,7 +24,7 @@ use XmlValidator\XmlValidator;
  */
 class XmlSchema implements ValidatorInterface
 {
-    const SCHEMA_TYPE = 'xml';
+    const SCHEMA_TYPE = 'xsd';
 
     /**
      * {@inheritDoc}
