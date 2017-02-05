@@ -82,6 +82,7 @@ class ArachneInitializer implements ContextInitializer
         }
 
         $context->setValidationProvider($this->validationProvider);
+
         $context->setHttpClient($this->httpClient);
     }
 }

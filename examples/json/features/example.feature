@@ -18,14 +18,14 @@ Feature: Fake JSON API sample
     Then the status code should be 200
     And response should be a valid JSON
     And response header "Server" should contain "Google Frontend"
-    And response should validate against "one_two" schema
+    And response should validate against "one_two.json" schema
 
   Scenario:
     Given I use "POST" request method
     When I access the resource url "/one/two"
-    And I use the "one_two" file as request body
+    And I use the "one_two.json" file as request body
     And I set the header "Accept" to "application/vnd.arachne.v1"
     And I send the request
     Then the status code should be 200
     And response should be a valid JSON
-    And response should be identical to "one_two" file
+    And response should be identical to "one_two.json" file

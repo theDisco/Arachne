@@ -231,6 +231,27 @@ class ArachneContext implements Context
     }
 
     /**
+     * @Then response should be a valid XML
+     */
+    public function responseShouldBeAValidXml()
+    {
+        libxml_use_internal_errors(true);
+
+        $xmlDocument = simplexml_load_string($this->getResponse()->getBody());
+
+        if (!$xmlDocument) {
+
+            foreach (libxml_get_errors() as $error) {
+                $errors[] = $error->message;
+            }
+
+            libxml_clear_errors();
+
+            throw new Exception\InvalidXml(sprintf('Response is not a valid XML: %s', implode(', ', $errors)));
+        }
+    }
+
+    /**
      * @Then response header :arg1 should contain :arg2
      */
     public function responseHeaderShouldContain($arg1, $arg2)

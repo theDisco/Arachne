@@ -44,23 +44,30 @@ class Factory
     }
 
     /**
-     * @return Validation\SchemaValidator
+     * @return Validation\SchemaValidatorFactory
      */
-    public static function createSchemaValidator()
+    public static function createSchemaValidatorFactory()
     {
-        return new Validation\SchemaValidator;
+        return new Validation\SchemaValidatorFactory();
     }
 
     /**
-     * @param string $type
+     * @return Validation\FileValidatorFactory
+     */
+    public static function createFileValidatorFactory()
+    {
+        return new Validation\FileValidatorFactory();
+    }
+
+    /**
      * @return Provider
      */
-    public static function createValidationProvider($type)
+    public static function createValidationProvider()
     {
         return new Provider(
             self::createFileLocator(),
-            self::createSchemaValidator(),
-            $type
+            self::createSchemaValidatorFactory(),
+            self::createFileValidatorFactory()
         );
     }
 }

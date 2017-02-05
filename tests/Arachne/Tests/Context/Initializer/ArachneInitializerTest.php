@@ -30,7 +30,7 @@ class ArachneInitializerTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->initializer = new ArachneInitializer(
-            Mocks\Factory::createValidationProvider('json'),
+            Mocks\Factory::createValidationProvider(),
             Mocks\Factory::createHttpClient()
         );
     }
@@ -56,7 +56,7 @@ class ArachneInitializerTest extends \PHPUnit_Framework_TestCase
         $httpClient = Mocks\Factory::createHttpClient();
         $authProvider = new DummyProvider($httpClient);
         $initializer = new ArachneInitializer(
-            Mocks\Factory::createValidationProvider('json'),
+            Mocks\Factory::createValidationProvider(),
             $httpClient,
             $authProvider
         );
@@ -70,7 +70,7 @@ class ArachneInitializerTest extends \PHPUnit_Framework_TestCase
     {
         $httpClient = Mocks\Factory::createHttpClient();
         $initializer = new ArachneInitializer(
-            Mocks\Factory::createValidationProvider('json'),
+            Mocks\Factory::createValidationProvider(),
             $httpClient,
             null,
             ['X-Test-Header' => 'Test Value']
