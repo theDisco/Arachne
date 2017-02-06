@@ -53,38 +53,28 @@ class Provider
     /**
      * @param string $stringToValidate
      * @param string $schemaFilename
+     * @param string $schemaFileType
      * @return void
      */
-    public function validateAgainstSchema($stringToValidate, $schemaFilename)
+    public function validateAgainstSchema($stringToValidate, $schemaFilename, $schemaFileType)
     {
-        $path = $this->fileLocator->locateSchemaFile($schemaFilename);
-        $schemaType = $this->extractType($schemaFilename);
+        $path = $this->fileLocator->locateSchemaFile($schemaFilename, $schemaFileType);
 
-        $schemaValidator = $this->schemaValidatorFactory->create($schemaType);
+        $schemaValidator = $this->schemaValidatorFactory->create($schemaFileType);
         $schemaValidator->validateAgainstSchema($stringToValidate, $path);
     }
 
     /**
      * @param string $stringToValidate
-     * @param string $fileName
+     * @param string $fileFileName
+     * @param string $fileFileType
      * @return void
      */
-    public function validateStringEqualsFile($stringToValidate, $fileName)
+    public function validateStringEqualsFile($stringToValidate, $fileFileName, $fileFileType)
     {
-        $path = $this->fileLocator->locateResponseFile($fileName);
-        $fileType = $this->extractType($fileName);
+        $path = $this->fileLocator->locateResponseFile($fileFileName, $fileFileType);
 
-        $fileValidator = $this->fileValidatorFactory->create($fileType);
+        $fileValidator = $this->fileValidatorFactory->create($fileFileType);
         $fileValidator->validateStringEqualsFile($stringToValidate, $path);
-    }
-
-    /**
-     * @param string $filename
-     * @return string
-     */
-    private function extractType($filename)
-    {
-        $filenameParts = explode('.', $filename);
-        return $filenameParts[count($filenameParts)-1];
     }
 }

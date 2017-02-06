@@ -35,13 +35,14 @@ class FileLocator
 
     /**
      * @param string $schemaName
+     * @param string $extension
      * @return string
      */
-    public function locateSchemaFile($schemaName)
+    public function locateSchemaFile($schemaName, $extension)
     {
-        $errorMessage = "Schema file $schemaName cannot be found";
+        $errorMessage = "Schema file $schemaName.$extension cannot be found";
 
-        return $this->getFilePathFor('schema_file_dir', $schemaName, $errorMessage);
+        return $this->getFilePathFor('schema_file_dir', $schemaName, $extension, $errorMessage);
     }
 
     /**
@@ -49,11 +50,11 @@ class FileLocator
      * @param string $extension
      * @return string
      */
-    public function locateRequestFile($fileName)
+    public function locateRequestFile($fileName, $extension)
     {
-        $errorMessage = "Request file $fileName cannot be found";
+        $errorMessage = "Request file $fileName.$extension cannot be found";
 
-        return $this->getFilePathFor('request_file_dir', $fileName, $errorMessage);
+        return $this->getFilePathFor('request_file_dir', $fileName, $extension, $errorMessage);
     }
 
     /**
@@ -61,11 +62,11 @@ class FileLocator
      * @param string $extension
      * @return string
      */
-    public function locateResponseFile($fileName)
+    public function locateResponseFile($fileName, $extension)
     {
-        $errorMessage = "Response file $fileName cannot be found";
+        $errorMessage = "Response file $fileName.$extension cannot be found";
 
-        return $this->getFilePathFor('response_file_dir', $fileName, $errorMessage);
+        return $this->getFilePathFor('response_file_dir', $fileName, $extension, $errorMessage);
     }
 
     /**
@@ -75,10 +76,10 @@ class FileLocator
      * @param string $errorMessage
      * @return string
      */
-    private function getFilePathFor($configName, $fileName, $errorMessage)
+    private function getFilePathFor($configName, $fileName, $extension, $errorMessage)
     {
         $responseFileDirectory = $this->getConfigValue($configName);
-        $path = implode(DIRECTORY_SEPARATOR, [$responseFileDirectory, $fileName]);
+        $path = implode(DIRECTORY_SEPARATOR, [$responseFileDirectory, $fileName]) . '.' . $extension;
         $this->validateFileExists($path, $errorMessage);
 
         return $path;

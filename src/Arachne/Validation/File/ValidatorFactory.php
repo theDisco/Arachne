@@ -36,8 +36,9 @@ class ValidatorFactory
             case XmlFile::FILE_TYPE:
                 return new XmlFile();
                 break;
+            default:
+                return new JsonFile();
+                break;
         }
-
-        throw new \RuntimeException(sprintf('No File\Validator found for fileType (%s)', $fileType));
     }
 }

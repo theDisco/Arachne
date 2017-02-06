@@ -142,8 +142,10 @@ class ArachneContext implements Context
      */
     public function iUseTheFileAsRequestBody($arg1)
     {
-        // TODO web service type should not come from schema validator
-        $this->getHttpClient()->setRequestBody($arg1, true, 'json');
+        $filename = $this->extractFileName($arg1);
+        $fileType = $this->extractFileType($arg1);
+
+        $this->getHttpClient()->setRequestBody($filename, true, $fileType);
     }
 
     /**
@@ -240,7 +242,7 @@ class ArachneContext implements Context
         $xmlDocument = simplexml_load_string($this->getResponse()->getBody());
 
         if (!$xmlDocument) {
-
+            $errors = [];
             foreach (libxml_get_errors() as $error) {
                 $errors[] = $error->message;
             }
@@ -278,7 +280,11 @@ class ArachneContext implements Context
      */
     public function responseShouldValidateAgainstSchema($arg1)
     {
-        $this->getValidationProvider()->validateAgainstSchema($this->response->getBody(), $arg1);
+        $this->getValidationProvider()->validateAgainstSchema(
+            $this->response->getBody(),
+            $this->extractFileName($arg1),
+            $this->extractFileType($arg1)
+        );
     }
 
     /**
@@ -286,6 +292,35 @@ class ArachneContext implements Context
      */
     public function responseShouldBeIdenticalToFile($arg1)
     {
-        $this->getValidationProvider()->validateStringEqualsFile($this->response->getBody(), $arg1);
+        $this->getValidationProvider()->validateStringEqualsFile(
+            $this->response->getBody(),
+            $this->extractFileName($arg1),
+            $this->extractFileType($arg1));
+    }
+
+    /**
+     * @param string $fileName
+     * @return string
+     */
+    private function extractFileName($fileName)
+    {
+        $fileNameParts = explode('.', $fileName);
+        return $fileNameParts[0];
+    }
+
+    /**
+     * @param string $fileName
+     * @return string
+     */
+    private function extractFileType($fileName)
+    {
+        $fileNameParts = explode('.', $fileName);
+
+        // default fileType is always json
+        if (1 === count($fileNameParts)) {
+            return Validation\File\JsonFile::FILE_TYPE;
+        }
+
+        return $fileNameParts[count($fileNameParts)-1];
     }
 }

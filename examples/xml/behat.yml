@@ -11,7 +11,7 @@ default:
       headers:
         Authorization: Token token=123456
   suites:
-    json:
+    xml:
       contexts:
         - Arachne\Context\ArachneContext:
           - headers:

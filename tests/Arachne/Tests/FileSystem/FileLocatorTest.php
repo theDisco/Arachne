@@ -35,16 +35,16 @@ class FileLocatorTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('RuntimeException', '`request_file_dir` missing in the configuration');
         $fileLocator = new FileLocator(array());
-        $fileLocator->locateRequestFile('not.existing');
+        $fileLocator->locateRequestFile('not', 'existing');
     }
 
     public function testLocateSchemaFile()
     {
-        $actualPath = $this->fileLocator->locateSchemaFile('test.json');
+        $actualPath = $this->fileLocator->locateSchemaFile('test', 'json');
         $expectedPath = FIXTURES_DIR . '/schemas/test.json';
         $this->assertSame($expectedPath, $actualPath);
 
-        $actualPath = $this->fileLocator->locateSchemaFile('test.xml');
+        $actualPath = $this->fileLocator->locateSchemaFile('test', 'xml');
         $expectedPath = FIXTURES_DIR . '/schemas/test.xml';
         $this->assertSame($expectedPath, $actualPath);
     }
@@ -52,16 +52,16 @@ class FileLocatorTest extends \PHPUnit_Framework_TestCase
     public function testFailLocatingNotExistingSchemaFile()
     {
         $this->setExpectedException('RuntimeException', 'Schema file not.existing cannot be found');
-        $this->fileLocator->locateSchemaFile('not.existing');
+        $this->fileLocator->locateSchemaFile('not', 'existing');
     }
 
     public function testLocateRequestFile()
     {
-        $actualPath = $this->fileLocator->locateRequestFile('test.json');
+        $actualPath = $this->fileLocator->locateRequestFile('test', 'json');
         $expectedPath = FIXTURES_DIR . '/requests/test.json';
         $this->assertSame($expectedPath, $actualPath);
 
-        $actualPath = $this->fileLocator->locateRequestFile('test.xml');
+        $actualPath = $this->fileLocator->locateRequestFile('test', 'xml');
         $expectedPath = FIXTURES_DIR . '/requests/test.xml';
         $this->assertSame($expectedPath, $actualPath);
     }
@@ -69,16 +69,16 @@ class FileLocatorTest extends \PHPUnit_Framework_TestCase
     public function testFailLocatingNotExistingRequestFile()
     {
         $this->setExpectedException('RuntimeException', 'Request file not.existing cannot be found');
-        $this->fileLocator->locateRequestFile('not.existing');
+        $this->fileLocator->locateRequestFile('not', 'existing');
     }
 
     public function testLocateResponseFile()
     {
-        $actualPath = $this->fileLocator->locateResponseFile('test.json');
+        $actualPath = $this->fileLocator->locateResponseFile('test', 'json');
         $expectedPath = FIXTURES_DIR . '/responses/test.json';
         $this->assertSame($expectedPath, $actualPath);
 
-        $actualPath = $this->fileLocator->locateResponseFile('test.xml');
+        $actualPath = $this->fileLocator->locateResponseFile('test', 'xml');
         $expectedPath = FIXTURES_DIR . '/responses/test.xml';
         $this->assertSame($expectedPath, $actualPath);
     }
@@ -86,6 +86,6 @@ class FileLocatorTest extends \PHPUnit_Framework_TestCase
     public function testFailLocatingNotExistingResponseFile()
     {
         $this->setExpectedException('RuntimeException', 'Response file not.existing cannot be found');
-        $this->fileLocator->locateResponseFile('not.existing');
+        $this->fileLocator->locateResponseFile('not', 'existing');
     }
 }
