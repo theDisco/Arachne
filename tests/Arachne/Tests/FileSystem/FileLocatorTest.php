@@ -42,7 +42,10 @@ class FileLocatorTest extends \PHPUnit_Framework_TestCase
     {
         $actualPath = $this->fileLocator->locateSchemaFile('test', 'json');
         $expectedPath = FIXTURES_DIR . '/schemas/test.json';
+        $this->assertSame($expectedPath, $actualPath);
 
+        $actualPath = $this->fileLocator->locateSchemaFile('test', 'xml');
+        $expectedPath = FIXTURES_DIR . '/schemas/test.xml';
         $this->assertSame($expectedPath, $actualPath);
     }
 
@@ -56,7 +59,10 @@ class FileLocatorTest extends \PHPUnit_Framework_TestCase
     {
         $actualPath = $this->fileLocator->locateRequestFile('test', 'json');
         $expectedPath = FIXTURES_DIR . '/requests/test.json';
+        $this->assertSame($expectedPath, $actualPath);
 
+        $actualPath = $this->fileLocator->locateRequestFile('test', 'xml');
+        $expectedPath = FIXTURES_DIR . '/requests/test.xml';
         $this->assertSame($expectedPath, $actualPath);
     }
 
@@ -70,7 +76,10 @@ class FileLocatorTest extends \PHPUnit_Framework_TestCase
     {
         $actualPath = $this->fileLocator->locateResponseFile('test', 'json');
         $expectedPath = FIXTURES_DIR . '/responses/test.json';
+        $this->assertSame($expectedPath, $actualPath);
 
+        $actualPath = $this->fileLocator->locateResponseFile('test', 'xml');
+        $expectedPath = FIXTURES_DIR . '/responses/test.xml';
         $this->assertSame($expectedPath, $actualPath);
     }
 

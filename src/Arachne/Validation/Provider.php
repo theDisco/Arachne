@@ -21,14 +21,14 @@ use Arachne\FileSystem\FileLocator;
 class Provider
 {
     /**
-     * @var Schema\ValidatorInterface
+     * @var Schema\ValidatorFactory
      */
-    private $schemaValidator;
+    private $schemaValidatorFactory;
 
     /**
-     * @var Assert
+     * @var File\ValidatorFactory
      */
-    private $assertion;
+    private $fileValidatorFactory;
 
     /**
      * @var FileLocator
@@ -36,43 +36,45 @@ class Provider
     private $fileLocator;
 
     /**
-     * @var string
-     */
-    private $type;
-
-    /**
      * @param FileLocator $fileLocator
-     * @param Schema\ValidatorInterface $schemaValidator
-     * @param string $type
+     * @param Schema\ValidatorFactory $schemaValidatorFactory
+     * @param File\ValidatorFactory $fileValidatorFactory
      */
-    public function __construct(FileLocator $fileLocator, Schema\ValidatorInterface $schemaValidator, $type)
-    {
+    public function __construct(
+        FileLocator $fileLocator,
+        Schema\ValidatorFactory $schemaValidatorFactory,
+        File\ValidatorFactory $fileValidatorFactory
+    ) {
         $this->fileLocator = $fileLocator;
-        $this->schemaValidator = $schemaValidator;
-        $this->type = $type;
-        $this->assertion = new Assert;
+        $this->schemaValidatorFactory = $schemaValidatorFactory;
+        $this->fileValidatorFactory = $fileValidatorFactory;
     }
 
     /**
      * @param string $stringToValidate
-     * @param string $schemaName
+     * @param string $schemaFilename
+     * @param string $schemaFileType
      * @return void
      */
-    public function validateAgainstSchema($stringToValidate, $schemaName)
+    public function validateAgainstSchema($stringToValidate, $schemaFilename, $schemaFileType)
     {
-        $path = $this->fileLocator->locateSchemaFile($schemaName, $this->type);
-        $this->schemaValidator->validateAgainstSchema($stringToValidate, $path);
+        $path = $this->fileLocator->locateSchemaFile($schemaFilename, $schemaFileType);
+
+        $schemaValidator = $this->schemaValidatorFactory->create($schemaFileType);
+        $schemaValidator->validateAgainstSchema($stringToValidate, $path);
     }
 
     /**
      * @param string $stringToValidate
-     * @param string $fileName
+     * @param string $fileFileName
+     * @param string $fileFileType
      * @return void
      */
-    public function validateStringEqualsFile($stringToValidate, $fileName)
+    public function validateStringEqualsFile($stringToValidate, $fileFileName, $fileFileType)
     {
-        // TODO provide type based validation through strategies
-        $filePath = $this->fileLocator->locateResponseFile($fileName, $this->type);
-        $this->assertion->assertJsonStringEqualsJsonFile($filePath, $stringToValidate);
+        $path = $this->fileLocator->locateResponseFile($fileFileName, $fileFileType);
+
+        $fileValidator = $this->fileValidatorFactory->create($fileFileType);
+        $fileValidator->validateStringEqualsFile($stringToValidate, $path);
     }
 }

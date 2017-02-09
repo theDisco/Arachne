@@ -23,6 +23,8 @@ use JsonSchema\Validator;
  */
 class JsonSchema implements ValidatorInterface
 {
+    const SCHEMA_TYPE = 'json';
+
     /**
      * {@inheritDoc}
      */
@@ -47,13 +49,5 @@ class JsonSchema implements ValidatorInterface
 
             throw new Exception\InvalidJson(implode(', ', $errors));
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getType()
-    {
-        return 'json';
     }
 }

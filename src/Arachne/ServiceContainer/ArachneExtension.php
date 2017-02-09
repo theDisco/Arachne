@@ -119,13 +119,12 @@ class ArachneExtension implements Extension
      */
     private function loadValidationProvider(ContainerBuilder $container)
     {
-        // TODO load before and provide configurable (json, xml) schema validation
         $definition = new Definition(
             'Arachne\Validation\Provider',
             array(
                 new Reference(self::FILE_LOCATOR_REF),
-                new Validation\Schema\JsonSchema,
-                'json'
+                new Validation\Schema\ValidatorFactory(),
+                new Validation\File\ValidatorFactory()
             )
         );
         $container->setDefinition(self::VALIDATION_PROVIDER_REF, $definition);

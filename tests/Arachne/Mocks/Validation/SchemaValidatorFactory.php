@@ -11,22 +11,20 @@
 
 namespace Arachne\Mocks\Validation;
 
-use Arachne\Validation\Schema\ValidatorInterface;
+use Arachne\Validation\Schema\ValidatorFactory;
 
 /**
  * Class SchemaValidator
  * @package Arachne\Mocks\Validation
  * @author Wojtek Gancarczyk <gancarczyk@gmail.com>
  */
-class SchemaValidator implements ValidatorInterface
+class SchemaValidatorFactory extends ValidatorFactory
 {
     /**
-     * @param string $stringToValidate
-     * @param string $schemaFile
-     * @return void
+     * @inheritdoc
      */
-    public function validateAgainstSchema($stringToValidate, $schemaFile)
+    public function create($schemaType)
     {
-        // TODO: Implement validateAgainstSchema() method.
+        // TODO: Implement create($schemaType) method.
     }
 }

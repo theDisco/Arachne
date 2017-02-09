@@ -1,0 +1,18 @@
+default:
+  extensions:
+    Arachne\ServiceContainer\ArachneExtension:
+      base_url: http://urlecho.appspot.com
+      paths:
+        schema_file_dir: %paths.base%/schemas
+        request_file_dir: %paths.base%/requests
+        response_file_dir: %paths.base%/responses
+      auth:
+        provider: Arachne\Auth\DummyProvider
+      headers:
+        Authorization: Token token=123456
+  suites:
+    xml:
+      contexts:
+        - Arachne\Context\ArachneContext:
+          - headers:
+              X-Example-Header: Example Value
