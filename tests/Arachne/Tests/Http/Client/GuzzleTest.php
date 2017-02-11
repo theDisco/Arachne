@@ -13,10 +13,9 @@ namespace Arachne\Tests\Http\Client;
 
 use Arachne\Http\Client\Guzzle;
 use Arachne\Mocks\Factory;
-use GuzzleHttp\Client;
-use GuzzleHttp\Message\Response;
-use GuzzleHttp\Stream\Stream;
-use GuzzleHttp\Subscriber\Mock;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Psr7;
 
 /**
  * Class GuzzleTest
@@ -30,11 +29,10 @@ class GuzzleTest extends \PHPUnit_Framework_TestCase
         $client = new Guzzle('http://www.example.com', Factory::createFileLocator());
         $client->setRequestMethod('GET');
         $client->setPath('/non/existent');
-        $client->beforeRequest(function(Client $client) {
-            $mock = new Mock([
-                new Response(404, [], Stream::factory('not_existent')),
-            ]);
-            $client->getEmitter()->attach($mock);
+        $client->applyHandler(function() {
+            return HandlerStack::create(new MockHandler([
+                new Psr7\Response(404, [], 'not_existent')
+            ]));
         });
         $response = $client->send();
         $this->assertSame(404, $response->getStatusCode());
