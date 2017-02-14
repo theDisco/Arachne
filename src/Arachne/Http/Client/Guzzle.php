@@ -15,8 +15,7 @@ use Arachne\FileSystem\FileLocator;
 use Arachne\Http\Response;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception;
-use GuzzleHttp\Stream;
-use RuntimeException;
+use GuzzleHttp\Psr7;
 
 /**
  * Class Guzzle
@@ -31,7 +30,7 @@ class Guzzle implements ClientInterface
     private $requestBody;
     private $fileLocator;
     private $headers;
-    private $beforeRequestCallback;
+    private $applyHandlerCallback;
 
     /**
      * @param string $baseUrl
@@ -82,7 +81,7 @@ class Guzzle implements ClientInterface
             $requestBody = fopen($path, 'r');
         }
 
-        $this->requestBody = Stream\Stream::factory($requestBody);
+        $this->requestBody = Psr7\stream_for($requestBody);
     }
 
     /**
@@ -90,21 +89,19 @@ class Guzzle implements ClientInterface
      */
     public function send()
     {
-        $client = new Client;
-
-        if ($this->beforeRequestCallback) {
-            call_user_func($this->beforeRequestCallback, $client);
+        $handler = [];
+        if ($this->applyHandlerCallback) {
+            $handler['handler'] = call_user_func($this->applyHandlerCallback);
         }
 
-        $request = $client->createRequest($this->requestMethod, $this->baseUrl . $this->path);
+        $client = new Client($handler);
 
-        if ($this->requestBody) {
-            $request->setBody($this->requestBody);
-        }
-
-        if ($this->headers) {
-            $request->addHeaders($this->headers);
-        }
+        $request = new Psr7\Request(
+            $this->requestMethod,
+            $this->baseUrl . $this->path,
+            $this->headers ? $this->headers : [],
+            $this->requestBody
+        );
 
         $this->reset();
 
@@ -121,9 +118,9 @@ class Guzzle implements ClientInterface
      * @param callable $callback
      * @return void
      */
-    public function beforeRequest(callable $callback)
+    public function applyHandler(callable $callback)
     {
-        $this->beforeRequestCallback = $callback;
+        $this->applyHandlerCallback = $callback;
     }
 
     /**

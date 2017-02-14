@@ -11,7 +11,7 @@
 
 namespace Arachne\Http\Response;
 
-use GuzzleHttp\Message\ResponseInterface as Response;
+use GuzzleHttp\Psr7\Response;
 
 /**
  * Class Guzzle
@@ -48,6 +48,6 @@ class Guzzle implements ResponseInterface
      */
     public function getHeader($name)
     {
-        return $this->response->getHeader($name);
+        return $this->response->getHeaderLine($name);
     }
 }
