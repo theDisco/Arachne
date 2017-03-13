@@ -38,7 +38,7 @@ class XmlSchema implements ValidatorInterface
             if(!$validator->isValid()){
                 $errors = [];
                 foreach ($validator->getErrors() as $error) {
-                    $errors[] = $error['message'];
+                    $errors[] = $error->message;
                 }
 
                 throw new Exception\InvalidXml(implode(', ', $errors));
