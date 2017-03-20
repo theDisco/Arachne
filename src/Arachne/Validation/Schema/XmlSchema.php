@@ -12,9 +12,6 @@
 namespace Arachne\Validation\Schema;
 
 use Arachne\Exception;
-use JsonSchema\RefResolver;
-use JsonSchema\Uri\UriRetriever;
-use JsonSchema\Validator;
 use XmlValidator\XmlValidator;
 
 /**
@@ -35,7 +32,7 @@ class XmlSchema implements ValidatorInterface
             $validator = new XmlValidator();
             $validator->validate($stringToValidate, $schemaFile);
 
-            if(!$validator->isValid()){
+            if (!$validator->isValid()) {
                 $errors = [];
                 foreach ($validator->getErrors() as $error) {
                     $errors[] = $error->message;

@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<example>
+    <child_string>This is an example.</child_string>
+    <child_integer>1</child_integer>
+</example>
