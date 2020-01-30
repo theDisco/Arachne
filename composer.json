@@ -1,7 +1,7 @@
 {
     "name": "aferalabs/arachne",
     "description": "Behat extension for testing and validating XML and JSON based web services",
-    "version": "0.4.1",
+    "version": "0.5.0",
     "type": "library",
     "license": "MIT",
     "authors": [
