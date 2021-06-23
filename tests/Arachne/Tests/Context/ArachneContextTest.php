@@ -15,13 +15,14 @@ use Arachne\Auth\DummyProvider;
 use Arachne\Context\ArachneContext;
 use Arachne\Mocks\Factory;
 use Arachne\Mocks\Http\Client;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class ArachneContextTest
  * @package Arachne\Tests\FileSystem
  * @author Wojtek Gancarczyk <gancarczyk@gmail.com>
  */
-class ArachneContextTest extends \PHPUnit_Framework_TestCase
+class ArachneContextTest extends TestCase
 {
     /**
      * @var ArachneContext
@@ -42,7 +43,8 @@ class ArachneContextTest extends \PHPUnit_Framework_TestCase
 
     public function testFailIfHttpClientWasNotSet()
     {
-        $this->setExpectedException('RuntimeException', 'Http client was not set');
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Http client was not set');
         $context = new ArachneContext;
         $context->iSendTheRequest();
     }
@@ -84,10 +86,8 @@ class ArachneContextTest extends \PHPUnit_Framework_TestCase
 
     public function testFailTheStatusCodeShouldBeIfTheStatusCodeIsInvalid()
     {
-        $this->setExpectedException(
-            '\Arachne\Exception\InvalidStatusCode',
-            'Resource returned status code 200, status code 400 expected.'
-        );
+        $this->expectException(\Arachne\Exception\InvalidStatusCode::class);
+        $this->expectExceptionMessage('Resource returned status code 200, status code 400 expected.');
         $this->context->iSendTheRequest();
         $this->context->theStatusCodeShouldBe(400);
     }

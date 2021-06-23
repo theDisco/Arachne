@@ -12,13 +12,14 @@
 namespace Arachne\Tests\Validation\Schema;
 
 use Arachne\Validation\Schema\XmlSchema;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class XmlSchemaTest
  * @package Arachne\Tests\Validation\Schema
  * @author Wojtek Gancarczyk <gancarczyk@gmail.com>
  */
-class XmlSchemaTest extends \PHPUnit_Framework_TestCase
+class XmlSchemaTest extends TestCase
 {
     public function testDoesNotFailOnValidSchema()
     {
@@ -31,10 +32,8 @@ class XmlSchemaTest extends \PHPUnit_Framework_TestCase
 
     public function testFailsOnInvalidSchema()
     {
-        $this->setExpectedException(
-          \Arachne\Exception\InvalidXml::class,
-          "Element 'invalid': This element is not expected. Expected is ( child_string )."
-        );
+        $this->expectException(\Arachne\Exception\InvalidXml::class);
+        $this->expectExceptionMessage("Element 'invalid': This element is not expected. Expected is ( child_string ).");
         $validator = new XmlSchema;
         $validator->validateAgainstSchema(
             file_get_contents(implode(DIRECTORY_SEPARATOR, [FIXTURES_DIR, 'responses', 'test-invalid.xml'])),

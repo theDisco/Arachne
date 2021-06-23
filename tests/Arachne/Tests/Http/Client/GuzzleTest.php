@@ -16,13 +16,14 @@ use Arachne\Mocks\Factory;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class GuzzleTest
  * @package Arachne\Tests\Http\Client
  * @author Wojtek Gancarczyk <gancarczyk@gmail.com>
  */
-class GuzzleTest extends \PHPUnit_Framework_TestCase
+class GuzzleTest extends TestCase
 {
     public function testDoNotFailIfResponseCodeIs404()
     {

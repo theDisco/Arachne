@@ -14,13 +14,14 @@ namespace Arachne\Tests\Context\Initializer;
 use Arachne\Auth\DummyProvider;
 use Arachne\Context\Initializer\ArachneInitializer;
 use Arachne\Mocks;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class ArachneInitializerTest
  * @package Arachne\Tests\Context\Initilizer
  * @author Wojtek Gancarczyk <gancarczyk@gmail.com>
  */
-class ArachneInitializerTest extends \PHPUnit_Framework_TestCase
+class ArachneInitializerTest extends TestCase
 {
     /**
      * @var ArachneInitializer

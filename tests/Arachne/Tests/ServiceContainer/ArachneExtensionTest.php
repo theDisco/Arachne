@@ -12,6 +12,7 @@
 namespace Arachne\Tests\ServiceContainer;
 
 use Arachne\ServiceContainer\ArachneExtension;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
@@ -19,7 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  * @package Arachne\Tests\ServiceContainer
  * @author Wojtek Gancarczyk <gancarczyk@gmail.com>
  */
-class ArachneExtensionTest extends \PHPUnit_Framework_TestCase
+class ArachneExtensionTest extends TestCase
 {
     public function testDoNotFailIfAuthProviderNotSetUp()
     {
@@ -30,6 +31,7 @@ class ArachneExtensionTest extends \PHPUnit_Framework_TestCase
         $containerBuilder = new ContainerBuilder;
         $extension = new ArachneExtension;
         $extension->load($containerBuilder, $config);
+        $containerBuilder->registerExtension($extension);
         $containerBuilder->compile();
         $this->assertSame(
             'Arachne\Context\Initializer\ArachneInitializer',

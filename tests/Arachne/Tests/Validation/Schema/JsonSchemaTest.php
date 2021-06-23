@@ -12,13 +12,14 @@
 namespace Arachne\Tests\Validation\Schema;
 
 use Arachne\Validation\Schema\JsonSchema;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class JsonSchemaTest
  * @package Arachne\Tests\Validation\Schema
  * @author Wojtek Gancarczyk <gancarczyk@gmail.com>
  */
-class JsonSchemaTest extends \PHPUnit_Framework_TestCase
+class JsonSchemaTest extends TestCase
 {
     public function testDoesNotFailOnValidSchema()
     {
@@ -31,7 +32,8 @@ class JsonSchemaTest extends \PHPUnit_Framework_TestCase
 
     public function testFailsOnInvalidSchema()
     {
-        $this->setExpectedException(\Arachne\Exception\InvalidJson::class, 'The property lastName is required');
+        $this->expectException(\Arachne\Exception\InvalidJson::class);
+        $this->expectExceptionMessage('The property lastName is required');
         $validator = new JsonSchema;
         $validator->validateAgainstSchema(
             file_get_contents(implode(DIRECTORY_SEPARATOR, [FIXTURES_DIR, 'responses', 'test-invalid.json'])),

@@ -13,13 +13,14 @@ namespace Arachne\Tests\FileSystem;
 
 use Arachne\FileSystem\FileLocator;
 use Arachne\Mocks\Factory;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class FileLocatorTest
  * @package Arachne\Tests\FileSystem
  * @author Wojtek Gancarczyk <gancarczyk@gmail.com>
  */
-class FileLocatorTest extends \PHPUnit_Framework_TestCase
+class FileLocatorTest extends TestCase
 {
     /**
      * @var FileLocator
@@ -33,7 +34,8 @@ class FileLocatorTest extends \PHPUnit_Framework_TestCase
 
     public function testFailOnNotExistingConfigurationValue()
     {
-        $this->setExpectedException('RuntimeException', '`request_file_dir` missing in the configuration');
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('`request_file_dir` missing in the configuration');
         $fileLocator = new FileLocator(array());
         $fileLocator->locateRequestFile('not', 'existing');
     }
@@ -51,7 +53,8 @@ class FileLocatorTest extends \PHPUnit_Framework_TestCase
 
     public function testFailLocatingNotExistingSchemaFile()
     {
-        $this->setExpectedException('RuntimeException', 'Schema file not.existing cannot be found');
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Schema file not.existing cannot be found');
         $this->fileLocator->locateSchemaFile('not', 'existing');
     }
 
@@ -68,7 +71,8 @@ class FileLocatorTest extends \PHPUnit_Framework_TestCase
 
     public function testFailLocatingNotExistingRequestFile()
     {
-        $this->setExpectedException('RuntimeException', 'Request file not.existing cannot be found');
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Request file not.existing cannot be found');
         $this->fileLocator->locateRequestFile('not', 'existing');
     }
 
@@ -85,7 +89,8 @@ class FileLocatorTest extends \PHPUnit_Framework_TestCase
 
     public function testFailLocatingNotExistingResponseFile()
     {
-        $this->setExpectedException('RuntimeException', 'Response file not.existing cannot be found');
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Response file not.existing cannot be found');
         $this->fileLocator->locateResponseFile('not', 'existing');
     }
 }
