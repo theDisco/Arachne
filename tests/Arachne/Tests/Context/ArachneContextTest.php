@@ -34,7 +34,7 @@ class ArachneContextTest extends TestCase
      */
     private $client;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->client = Factory::createHttpClient();
         $this->context = new ArachneContext;

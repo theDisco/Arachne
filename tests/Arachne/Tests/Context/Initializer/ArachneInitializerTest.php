@@ -28,7 +28,7 @@ class ArachneInitializerTest extends TestCase
      */
     private $initializer;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->initializer = new ArachneInitializer(
             Mocks\Factory::createValidationProvider(),

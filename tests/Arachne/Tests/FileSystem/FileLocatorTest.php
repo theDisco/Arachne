@@ -27,7 +27,7 @@ class FileLocatorTest extends TestCase
      */
     private $fileLocator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->fileLocator = Factory::createFileLocator();
     }
